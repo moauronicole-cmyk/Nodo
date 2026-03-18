@@ -9,8 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #373737;
-  --surface: #1C1C1C;
+  --bg: #000000;
+  --surface: #000000;
   --headerback: #1a1a1a;
   --surface-hover: #242424;
   --border: rgba(255,255,255,0.1);
@@ -135,15 +135,12 @@ body {
 /* ─── EVENT CARD ─────────────────────────────────── */
 .event-card {
   background: var(--surface);
-  border: 1px solid var(--border);
   overflow: hidden;
-  border-radius: 2%;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   transition: border-color 0.25s var(--ease), transform 0.25s var(--ease), background 0.2s;
   animation: cardIn 0.45s var(--ease) both;
-  border-color: var(--border-active);
 }
 @keyframes cardIn {
   from { opacity: 0; transform: translateY(14px); }
@@ -226,7 +223,7 @@ body {
 .btn-disponibile {
   font-family: var(--font-m); font-size: 0.6rem; font-weight: 700;
   padding: 0.45rem 1.1rem; border-radius: 8px;
-  background: var(--bg); border: 1px solid var(--border);
+  background: var(--headerback); border: 1px solid var(--border);
   color: var(--txt); cursor: pointer; letter-spacing: 0.03em;
   text-transform: uppercase;
   transition: background 0.2s, border-color 0.2s;
@@ -421,7 +418,7 @@ function renderGrid(places) {
       <div class="card-body">
         <span class="card-location">📍 ${p.neighborhood || ''}</span>
         <h3 class="card-title">${p.name || ''}</h3>
-        ${p.description ? `<p class="card-desc">${p.description}</p>` : ''}
+        ${p.short_desc ? `<p class="card-desc">${p.short_desc}</p>` : ''}
         ${tagsHtml ? `<div class="card-tags">${tagsHtml}</div>` : ''}
       </div>
       <div class="card-footer">
@@ -431,7 +428,7 @@ function renderGrid(places) {
             <path d="M8.59 13.51l6.83 3.98M15.41 6.51L8.59 10.49"/>
           </svg>
         </button>
-        <button class="btn-disponibile">Disponibile</button>
+        <button class="btn-disponibile">esplora</button>
       </div>
     `;
 
