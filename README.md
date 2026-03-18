@@ -1,3 +1,4 @@
 # Nodo
 final nodo
-merda coglione andreas
+merda coglione andrea
+ti amo cazzi
