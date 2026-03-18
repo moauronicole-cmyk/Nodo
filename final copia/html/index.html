@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Pulse — ClubX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <style>
+        /* =========================================
+           LANDING.CSS — The Pulse
+           Stesso DNA di pulse.css ma tema chiaro
+           Alternanza bianco / nero, verde come accento
+        ========================================= */
+
+        :root {
+            --bg-color:     #F4F4F0;
+            --text-color:   #1A1A1A;
+            --accent-color: #CCFF00;
+            --border-color: #1A1A1A;
+            --bg-dark:      #1A1A1A;
+            --text-dark:    #F4F4F0;
+            --muted-light:  rgba(26,26,26,0.42);
+            --muted-dark:   rgba(244,244,240,0.42);
+            --card-bg-dark: #212121;
+
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-mono:    'Space Mono', monospace;
+
+            --brutal-shadow:       4px 4px 0px #1A1A1A;
+            --brutal-shadow-hover: 6px 6px 0px #1A1A1A;
+            --brutal-shadow-inv:       4px 4px 0px rgba(244,244,240,0.2);
+            --brutal-shadow-inv-hover: 6px 6px 0px rgba(244,244,240,0.25);
+            --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-mono);
+            overflow-x: hidden;
+        }
+
+        /* ── SEZIONI ── */
+        .s-white {
+            background: var(--bg-color);
+            color: var(--text-color);
+            border-bottom: 2px solid var(--border-color);
+        }
+        .s-black {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            border-bottom: 2px solid var(--text-dark);
+        }
+
+        /* ── INTESTAZIONE SEZIONE ── */
+        .sec-head {
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            opacity: 0.4;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .sec-head::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: currentColor;
+            opacity: 0.2;
+        }
+
+        /* =========================================
+           NAVBAR — bianca (sovrascrive navbar.css
+           solo per la landing)
+        ========================================= */
+        .navbar {
+            background: var(--bg-color) !important;
+            border-bottom: 2px solid var(--border-color) !important;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .logo-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-color);
+            margin-left: 3px;
+            vertical-align: middle;
+        }
+
+        .nav-links a {
+            color: var(--muted-light) !important;
+        }
+        .nav-links a:hover { color: var(--text-color) !important; }
+        .nav-links a::after { background: var(--text-color) !important; }
+
+        .btn-nav {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            padding: 0.45rem 1.1rem;
+            background: var(--text-color);
+            color: var(--bg-color);
+            border: 2px solid var(--border-color);
+            box-shadow: var(--brutal-shadow);
+            cursor: pointer;
+            transition: transform 0.12s var(--ease-bounce), box-shadow 0.12s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .btn-nav:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: var(--brutal-shadow-hover);
+        }
+        .btn-nav .arr { color: var(--accent-color); }
+
+        /* =========================================
+           HERO
+        ========================================= */
+        .hero {
+            padding: 5rem 11rem 5rem;
+            display: grid;
+            grid-template-columns: 1fr 615px;
+            gap: 3rem;
+            align-items: end;
+        }
+
+        .hero-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--muted-light);
+            margin-bottom: 1.2rem;
+        }
+
+        .hero-h1 {
+            font-family: var(--font-heading);
+            font-size: 4.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -3px;
+            line-height: 1.2;
+            color: var(--text-color);
+            margin-bottom: 1.6rem;
+        }
+
+        .hero-h1 mark {
+            background: var(--accent-color);
+            color: var(--text-color);
+            padding: 0 5px;
+            display: inline;
+            line-height: 1.1;
+        }
+
+        .hero-sub {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            line-height: 1.7;
+            color: var(--muted-light);
+            max-width: 340px;
+            margin-bottom: 2rem;
+            border-left: 2px solid var(--border-color);
+            padding-left: 1rem;
+        }
+
+        .hero-btns { display: flex; gap: 0; }
+
+        .btn-primary {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            padding: 0.8rem 1.4rem;
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
+            box-shadow: var(--brutal-shadow);
+            cursor: pointer;
+            transition: transform 0.12s var(--ease-bounce), box-shadow 0.12s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-primary:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: var(--brutal-shadow-hover);
+        }
+
+        .btn-outline {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            padding: 0.8rem 1.4rem;
+            background: transparent;
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
+            box-shadow: var(--brutal-shadow);
+            cursor: pointer;
+            transition: transform 0.12s var(--ease-bounce), box-shadow 0.12s;
+            margin-left:10px;
+        }
+        .btn-outline:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: var(--brutal-shadow-hover);
+        }
+
+        /* Stats hero */
+        .hero-stats { display: flex; flex-direction: column; }
+
+        .stat-block {
+            padding: 1.1rem 1.4rem;
+            border: 2px solid var(--border-color);
+            border-bottom: none;
+            background: var(--bg-color);
+        }
+        .stat-block:last-child { border-bottom: 2px solid var(--border-color); }
+
+        .stat-n {
+            font-family: var(--font-heading);
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -2px;
+            color: var(--text-color);
+            line-height: 1;
+        }
+        .stat-n em {
+            font-style: normal;
+            color: var(--accent-color);
+            background: var(--text-color);
+            padding: 0 3px;
+            font-size: 1.8rem;
+        }
+        .stat-l {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted-light);
+            margin-top: 0.3rem;
+        }
+
+        /* =========================================
+           COME FUNZIONA — nera
+        ========================================= */
+        .how { padding: 3.5rem 11rem; }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+        }
+
+        .step {
+            padding: 1.6rem;
+            border: 2px solid rgba(244,244,240,0.2);
+            border-right: none;
+            background: var(--card-bg-dark);
+            box-shadow: var(--brutal-shadow-inv);
+            transition: transform 0.12s var(--ease-bounce), box-shadow 0.12s;
+        }
+        .step:last-child { border-right: 2px solid rgba(244,244,240,0.2); }
+        .step:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: var(--brutal-shadow-inv-hover);
+        }
+
+        .step-num {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--accent-color);
+            margin-bottom: 0.8rem;
+        }
+        .step-ico { font-size: 1.3rem; display: block; margin-bottom: 0.8rem; }
+        .step-title {
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        .step-body {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--muted-dark);
+            line-height: 1.6;
+        }
+
+        /* =========================================
+           CATEGORIE — bianca
+        ========================================= */
+        .cats-section { padding: 3rem 11rem; }
+
+        .cat-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .cat-pill {
+            font-family: var(--font-mono);
+            font-size: 0.66rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.35rem 0.8rem;
+            border: 2px solid var(--border-color);
+            background: transparent;
+            color: var(--text-color);
+            box-shadow: 3px 3px 0 var(--border-color);
+            cursor: pointer;
+            transition: transform 0.12s var(--ease-bounce), box-shadow 0.12s, background 0.12s, color 0.12s;
+            white-space: nowrap;
+        }
+        .cat-pill:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 var(--border-color);
+        }
+        .cat-pill.active {
+            background: var(--text-color);
+            color: var(--accent-color);
+            border-color: var(--text-color);
+            box-shadow: 2px 2px 0 rgba(26,26,26,0.4);
+            transform: translate(1px, 1px);
+        }
+
+        /* =========================================
+           MANIFESTO — nera
+        ========================================= */
+        .manifesto { padding: 4rem 11rem; }
+
+        .manifesto-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .mf-item {
+            padding: 1.5rem;
+            border: 2px solid rgba(244,244,240,0.12);
+            border-bottom: none;
+            border-right: none;
+        }
+        .mf-item:nth-child(2n)  { border-right: 2px solid rgba(244,244,240,0.12); }
+        .mf-item:nth-child(3),
+        .mf-item:nth-child(4)   { border-bottom: 2px solid rgba(244,244,240,0.12); }
+
+        .mf-icon { font-size: 1.1rem; margin-bottom: 0.8rem; }
+        .mf-title {
+            font-family: var(--font-heading);
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        .mf-title::before { content: '— '; color: var(--accent-color); }
+        .mf-body {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--muted-dark);
+            line-height: 1.6;
+        }
+
+        /* =========================================
+           CARD PREVIEW — bianca
+        ========================================= */
+        .preview { padding: 3rem 11rem; }
+
+        .card-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+        }
+
+        .pcard {
+            border: 2px solid var(--border-color);
+            border-right: none;
+            padding: 1.2rem;
+            background: var(--bg-color);
+            box-shadow: var(--brutal-shadow);
+            cursor: pointer;
+            transition: transform 0.12s var(--ease-bounce), box-shadow 0.12s;
+        }
+        .pcard:last-child { border-right: 2px solid var(--border-color); }
+        .pcard:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: var(--brutal-shadow-hover);
+        }
+
+        .pc-nbhd {
+            font-family: var(--font-mono);
+            font-size: 0.58rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted-light);
+            margin-bottom: 0.3rem;
+        }
+        .pc-name {
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            color: var(--text-color);
+            margin-bottom: 0.3rem;
+        }
+        .pc-desc {
+            font-size: 0.7rem;
+            color: var(--muted-light);
+            line-height: 1.4;
+        }
+        .pc-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 0.7rem;
+        }
+        .pc-tag {
+            font-family: var(--font-mono);
+            font-size: 0.56rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 1.5px solid var(--border-color);
+            padding: 0.1rem 11rem;
+            color: var(--text-color);
+        }
+        .pc-tag.accent {
+            background: var(--accent-color);
+            color: var(--text-color);
+            border-color: var(--border-color);
+        }
+
+        /* =========================================
+           CTA FINALE — nera
+        ========================================= */
+        .cta-section {
+            padding: 4rem 11rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .cta-h {
+            font-family: var(--font-heading);
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            color: var(--text-dark);
+            line-height: 0.95;
+        }
+        .cta-h span { color: var(--accent-color); }
+
+        .cta-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.8rem;
+        }
+
+        .btn-cta {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            padding: 1rem 2rem;
+            background: var(--accent-color);
+            color: var(--text-color);
+            border: 2px solid var(--accent-color);
+            box-shadow: 4px 4px 0 rgba(204,255,0,0.25);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: transform 0.12s var(--ease-bounce), box-shadow 0.12s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-cta:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 rgba(204,255,0,0.3);
+        }
+
+        .cta-note {
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            color: var(--muted-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* =========================================
+           FOOTER — bianca
+        ========================================= */
+        .footer {
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .footer-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-color);
+            display: inline-block;
+        }
+        .footer-note {
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            color: var(--muted-light);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .footer-link {
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--muted-light);
+            text-decoration: none;
+            letter-spacing: 0.06em;
+            transition: color 0.15s;
+        }
+        .footer-link:hover { color: var(--text-color); }
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+        @media (max-width: 860px) {
+            .hero {
+                grid-template-columns: 1fr;
+                padding: 3rem 1.2rem 2.5rem;
+                gap: 2rem;
+            }
+            .hero-h1 { font-size: 3rem; letter-spacing: -2px; }
+            .hero-stats { flex-direction: row; }
+            .stat-block { flex: 1; border-bottom: 2px solid var(--border-color); border-right: none; }
+            .stat-block:last-child { border-right: 2px solid var(--border-color); }
+
+            .steps { grid-template-columns: 1fr; }
+            .step { border-right: 2px solid rgba(244,244,240,0.2) !important; border-bottom: none; }
+            .step:last-child { border-bottom: 2px solid rgba(244,244,240,0.2); }
+
+            .manifesto-grid { grid-template-columns: 1fr; }
+            .mf-item { border-right: 2px solid rgba(244,244,240,0.12) !important; }
+            .mf-item:nth-child(3) { border-bottom: none; }
+            .mf-item:last-child { border-bottom: 2px solid rgba(244,244,240,0.12); }
+
+            .card-row { grid-template-columns: 1fr; }
+            .pcard { border-right: 2px solid var(--border-color) !important; border-bottom: none; }
+            .pcard:last-child { border-bottom: 2px solid var(--border-color); }
+
+            .cta-section { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+            .cta-right { align-items: flex-start; }
+            .cta-h { font-size: 2rem; }
+
+            .how, .cats-section, .manifesto, .preview { padding: 2.5rem 1.2rem; }
+            .cta-section { padding: 2.5rem 1.2rem; }
+            .footer { flex-direction: column; gap: 1rem; align-items: flex-start; padding: 1.2rem; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-h1 { font-size: 2.4rem; }
+            .hero-btns { flex-direction: column; }
+            .btn-outline { border-left: 2px solid var(--border-color); border-top: none; }
+            .hero-stats { flex-direction: column; }
+            .stat-block { border-right: 2px solid var(--border-color) !important; }
+        }
+        /* Container del Radar */
+.terminal-data {
+    margin-bottom: auto;
+    background: rgb(26, 26, 26);
+    border-bottom: 2px solid var(--accent-color);
+    padding: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--accent-color);
+    z-index: 2;
+}
+.radar-box {
+    border: 2px solid var(--border-color);
+    background-image:url(../icons/mappa.png);
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 8px 8px 0px var(--accent-color);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Griglia di sfondo tipo mappa militare */
+.radar-grid {
+    position: absolute;
+    inset: 0;
+    background-size: 40px 40px;
+    opacity: 0.5;
+}
+
+/* Linea di scansione che scende */
+.scan-line {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background: var(--accent-color);
+    box-shadow: 0 0 15px var(--accent-color);
+    top: -4px;
+    animation: scanMove 4s linear infinite;
+}
+
+/* Punti che appaiono sulla mappa */
+.map-ping {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulsePing 2s ease-out infinite;
+}
+
+/* Terminale testo in basso */
+
+
+@keyframes scanMove {
+    0% { top: 0%; }
+    100% { top: 100%; }
+}
+
+@keyframes pulsePing {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(4); opacity: 0; }
+}
+    </style>
+</head>
+<body>
+
+    <!-- ══ 1. HERO — bianca ══ -->
+    <section class="s-white hero">
+        <div class="hero-left">
+            <div class="hero-eyebrow">Roma · Community · Mappa</div>
+            <h1 class="hero-h1">
+                I posti<br>
+                <mark>che contano</mark><br>
+                davvero.
+            </h1>
+            <p class="hero-sub">
+                Nessun algoritmo. Nessuna pubblicità.<br>
+                Solo persone che condividono luoghi autentici nelle loro città.
+            </p>
+            <div class="hero-btns">
+                <a href="pulse.html" class="btn-primary">Esplora la mappa →</a>
+                <button class="btn-outline" onclick="document.querySelector('.how').scrollIntoView({behavior:'smooth'})">Come funziona</button>
+            </div>
+        </div>
+        <div class="radar-box">
+            <div class="terminal-data">
+                <div>> INITIALIZING NODO_SCAN...</div>
+                <div>> LOCATING CLUBS... DONE</div>
+                <div>> FILTERING AD_ALGORITHMS... DELETED</div>
+                <div>> CONNECTION: SECURE / LOCALS_ONLY</div>
+                <div style="margin-top: 5px; color: white;">COORDINATES: 41.8902° N, 12.4922° E</div>
+            </div>
+            <div class="radar-grid"></div>
+            <div class="scan-line"></div>
+            
+            <div class="map-ping" style="top: 60%; left: 70%;"></div>
+            <div class="map-ping" style="top: 45%; left: 25%;"></div>
+
+            <div style="position: absolute; top: 47%; left: 30%; color: white; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; background: black; padding: 2px;">
+                [TRASTEVERE: NIGHT_MODE]
+            </div>
+            <div style="position: absolute; top: 62%; left: 75%; color: white; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; background: black; padding: 2px;">
+                [SAN LORENZO: ACTIVE]
+            </div>
+
+            
+        </div>
+    </section>
+
+    <!-- ══ 2. COME FUNZIONA — nera ══ -->
+    <section class="s-black how">
+        <div class="sec-head">Come funziona</div>
+        <div class="steps">
+            <div class="step">
+                <span class="step-ico">◎</span>
+                <div class="step-title">Esplora la mappa</div>
+                <div class="step-body">Cerca luoghi vicino a te filtrati per categoria, orario e vibe. Aggiorna in tempo reale.</div>
+            </div>
+            <div class="step">
+                <span class="step-ico">✚</span>
+                <div class="step-title">Aggiungi un posto</div>
+                <div class="step-body">Conosci un posto che vale? Aggiungilo e aiuta la community a scoprirlo.</div>
+            </div>
+            <div class="step">
+                <span class="step-ico">🌙</span>
+                <div class="step-title">Modalità notte</div>
+                <div class="step-body">Attiva la notte e vedi solo i posti aperti dopo le 22.</div>
+            </div>
+            <div class="step">
+                <span class="step-ico">✦ </span>
+                <div class="step-title">Crea la tua Playlist</div>
+                <div class="step-body">Aggiungi  e scopri i luoghi preferiti dai locals.</div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ 3. CATEGORIE — bianca ══ -->
+    <section class="s-white cats-section">
+        <div class="sec-head">Cosa trovi</div>
+        <div class="cat-grid">
+            <button class="cat-pill active">Tutti</button>
+            <button class="cat-pill">📚 Studio</button>
+            <button class="cat-pill">🎵 Club</button>
+            <button class="cat-pill">✊ Centri sociali</button>
+            <button class="cat-pill">📖 Caffè letterari</button>
+            <button class="cat-pill">👗 Thrifting</button>
+            <button class="cat-pill">🌿 Parchi</button>
+            <button class="cat-pill">Skatepark</button>
+            <button class="cat-pill">Baretti</button>
+            <button class="cat-pill">🌿 Schimico</button>
+            <button class="cat-pill">Circoli Arci</button>
+            <button class="cat-pill">Spazi ibridi</button>
+        </div>
+    </section>
+
+    <!-- ══ 4. MANIFESTO — nera ══ -->
+    <section class="s-black manifesto">
+        <div class="sec-head">Perché esiste</div>
+        <div class="manifesto-grid">
+            <div class="mf-item">
+                <div class="mf-icon">◆</div>
+                <div class="mf-title">No algoritmi</div>
+                <div class="mf-body">Nessuna raccomandazione pagata. Vedi solo quello che la community ha scelto di condividere.</div>
+            </div>
+            <div class="mf-item">
+                <div class="mf-icon">◆</div>
+                <div class="mf-title">No pubblicità</div>
+                <div class="mf-body">Zero banner, zero sponsorizzazioni, zero dati venduti. Il prodotto sei tu, non il tuo profilo.</div>
+            </div>
+            <div class="mf-item">
+                <div class="mf-icon">◆</div>
+                <div class="mf-title">Fatta da locals</div>
+                <div class="mf-body">Ogni posto è stato aggiunto da qualcuno che ci è stato davvero. Nessun copy&paste da TripAdvisor.</div>
+            </div>
+            <div class="mf-item">
+                <div class="mf-icon">◆</div>
+                <div class="mf-title">Open community</div>
+                <div class="mf-body">Chiunque può contribuire, segnalare, migliorare. La mappa cresce con chi la usa.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ 5. CARD PREVIEW — bianca ══ -->
+    <section class="s-white preview">
+        <div class="sec-head">In città ora</div>
+        <div class="card-row">
+            <div class="pcard" onclick="window.location.href='/pulse'">
+                <div class="pc-nbhd">Navigli</div>
+                <div class="pc-name">Mercato della Terra</div>
+                <div class="pc-desc">Prodotti locali ogni sabato mattina. Porta la borsa.</div>
+                <div class="pc-tags">
+                    <span class="pc-tag accent">Aperto</span>
+                    <span class="pc-tag">Cibo</span>
+                    <span class="pc-tag">320m</span>
+                </div>
+            </div>
+            <div class="pcard" onclick="window.location.href='/pulse'">
+                <div class="pc-nbhd">Brera</div>
+                <div class="pc-name">Spazio Maiocchi</div>
+                <div class="pc-desc">Centro culturale ibrido. Mostre, eventi, caffè.</div>
+                <div class="pc-tags">
+                    <span class="pc-tag">Cultura</span>
+                    <span class="pc-tag">Spazi ibridi</span>
+                    <span class="pc-tag">580m</span>
+                </div>
+            </div>
+            <div class="pcard" onclick="window.location.href='/pulse'">
+                <div class="pc-nbhd">Corvetto</div>
+                <div class="pc-name">Cox18</div>
+                <div class="pc-desc">Centro sociale storico. Libreria, concerti, schimico.</div>
+                <div class="pc-tags">
+                    <span class="pc-tag accent">🌙 Notte</span>
+                    <span class="pc-tag">✊ Centri Sociali</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ 6. CTA FINALE — nera ══ -->
+    <section class="s-black cta-section">
+        <div class="cta-h">
+            Inizia a<br>
+            <span>esplorare.</span>
+        </div>
+        <div class="cta-right">
+            <a href="pulse.html" class="btn-cta">Apri la mappa →</a>
+            <span class="cta-note">Gratis · No registrazione</span>
+        </div>
+    </section>
+
+    <!-- ══ 7. FOOTER — bianca ══ -->
+    <footer class="s-white footer">
+        <div class="footer-logo">
+            NODO <span class="footer-dot"></span>
+        </div>
+        <div class="footer-links">
+            <a href="/pulse" class="footer-link">Mappa</a>
+            <a href="/about" class="footer-link">Chi siamo</a>
+            <a href="/aggiungi" class="footer-link">Contatti</a>
+        </div>
+        <div class="footer-note">© 2025 Nodo · Roma</div>
+    </footer>
+
+    <script src="../js/supabase.js"></script>
+    <script src="../js/navbar.js"></script>
+
+</body>
+</html>

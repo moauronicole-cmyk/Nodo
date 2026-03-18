@@ -1,0 +1,509 @@
+/* =========================================
+   THEGRID.CSS — Bacheca Urbana
+   Dark theme, poster sul muro
+   ========================================= */
+
+:root {
+    --bg-color: #1A1A1A;
+    --text-color: #F4F4F0;
+    --accent-color: #CCFF00;
+    --border-color: #F4F4F0;
+
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+
+    --brutal-shadow: 4px 4px 0px #111;
+    --brutal-shadow-hover: 8px 8px 0px #111;
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-mono);
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================================
+   NAVBAR — identica a index.css
+   ========================================= */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2.5rem;
+    border-bottom: 2px solid var(--border-color);
+    background: var(--bg-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: padding 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar.scrolled {
+    padding: 0.8rem 2.5rem;
+    box-shadow: 0 4px 0 var(--accent-color);
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.logo-x {
+    color: var(--accent-color);
+    display: inline-block;
+    transition: transform 0.3s var(--ease-bounce);
+}
+
+.logo:hover .logo-x { transform: rotate(-15deg) scale(1.2); }
+
+.nav-links a {
+    font-family: var(--font-mono);
+    color: var(--text-color);
+    text-decoration: none;
+    margin: 0 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--accent-color);
+    transition: width 0.25s ease;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after { width: 100%; }
+.nav-links a.active { color: var(--accent-color); }
+
+
+/* =========================================
+   GRID HEADER
+   ========================================= */
+.grid-header {
+    padding: 3rem 2.5rem 2rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.label-mono {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    background: var(--text-color);
+    color: var(--bg-color);
+    padding: 0.3rem 0.7rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.grid-title {
+    font-family: var(--font-heading);
+    font-size: clamp(3rem, 7vw, 5rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 1rem;
+    color:var(--accent-color);
+}
+
+.title-outline {
+    -webkit-text-stroke: 2px var(--accent-color);
+    color: transparent;
+}
+
+.grid-desc {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    opacity: 0.7;
+    margin-bottom: 2rem;
+    max-width: 500px;
+    line-height: 1.6;
+}
+
+/* FILTER ROW */
+.grid-filter-row {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.cat-btn {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.4rem 0.9rem;
+    border: 2px solid var(--border-color);
+    background: transparent;
+    color: var(--text-color);
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--border-color);
+    white-space: nowrap;
+    transition: transform 0.15s var(--ease-bounce), box-shadow 0.15s, background 0.15s, color 0.15s;
+}
+
+.cat-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--border-color);
+}
+
+.cat-btn.active {
+    background: var(--accent-color);
+    color: #111;
+    border-color: var(--accent-color);
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 #111;
+}
+
+/* =========================================
+   IL MURO
+   ========================================= */
+.wall-container {
+    position: relative;
+    flex: 1;
+    min-height: 75vh;
+    overflow: hidden;
+}
+
+.wall-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.wall-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+    filter: brightness(0.45) contrast(1.1) saturate(0.6);
+}
+
+.wall-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(26,26,26,0.3) 0%,
+        rgba(26,26,26,0.1) 40%,
+        rgba(26,26,26,0.5) 100%
+    );
+}
+
+/* POSTER STAGE */
+.posters-stage {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    min-height: 75vh;
+    padding: 4rem 3rem 5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    align-items: flex-start;
+}
+
+/* =========================================
+   POSTER
+   ========================================= */
+.poster {
+    position: relative;
+    width: 200px;
+    min-height: 290px;
+    border: 3px solid #111;
+    box-shadow: var(--brutal-shadow);
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: 1rem 0.8rem;
+    transform-origin: center bottom;
+
+    /* Animazione entrata */
+    opacity: 0;
+    transform: translateY(40px) rotate(var(--rot, 0deg));
+    transition:
+        opacity 0.5s var(--ease-out),
+        transform 0.4s var(--ease-bounce),
+        box-shadow 0.2s ease;
+}
+
+.poster.visible {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--rot, 0deg));
+}
+
+.poster:hover {
+    transform: translateY(-8px) rotate(0deg) scale(1.04) !important;
+    box-shadow: var(--brutal-shadow-hover);
+    z-index: 10;
+}
+
+/* Puntina da disegno */
+.poster::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background: #888;
+    border-radius: 50%;
+    border: 2px solid #444;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    z-index: 5;
+}
+
+/* Effetto carta strappata/usata */
+.poster::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0.6;
+}
+
+/* POSTER HEADER — colore dell'evento */
+.poster-header {
+    padding: 1.4rem 1rem 0.8rem;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.poster-category {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #111;
+    opacity: 0.7;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.poster-name {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    line-height: 1;
+    color: #111;
+    word-break: break-word;
+}
+
+/* POSTER BODY */
+.poster-body {
+    background: #111;
+    flex: 1;
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.poster-date {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    letter-spacing: 1px;
+}
+
+.poster-time {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: rgba(244,244,240,0.5);
+    letter-spacing: 1px;
+}
+
+.poster-venue {
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-color);
+    text-transform: uppercase;
+    margin-top: auto;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(244,244,240,0.15);
+}
+
+.poster-neighborhood {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: rgba(244,244,240,0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* POSTER FOOTER */
+.poster-footer {
+    background: #111;
+    padding: 0.7rem 1rem;
+    border-top: 2px solid rgba(244,244,240,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.poster-cta {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #111;
+    padding: 0.3rem 0.6rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.poster-arrow {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: rgba(244,244,240,0.4);
+}
+
+/* =========================================
+   WALL EMPTY STATE
+   ========================================= */
+.wall-empty {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.empty-icon { font-size: 3rem; }
+
+.empty-text {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-color);
+    opacity: 0.5;
+    text-transform: uppercase;
+}
+
+/* =========================================
+   FOOTER
+   ========================================= */
+.site-footer {
+    background: var(--text-color);
+    color: var(--bg-color);
+    padding: 2.5rem 2.5rem 1.5rem;
+    border-top: 4px solid var(--border-color);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.footer-logo {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+}
+
+.footer-logo span { color: var(--accent-color); }
+
+.footer-links {
+    display: flex;
+    gap: 2rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.footer-links a {
+    color: var(--bg-color);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.footer-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--bg-color);
+    transition: width 0.25s ease;
+}
+
+.footer-links a:hover::after { width: 100%; }
+
+.footer-bottom {
+    border-top: 2px solid var(--bg-color);
+    padding-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-align: center;
+    font-weight: 700;
+    opacity: 0.6;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 768px) {
+    .navbar { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .mobile-menu { display: flex; }
+
+    .grid-header { padding: 2rem 1.5rem 1.5rem; }
+    .grid-title { font-size: 3rem; }
+
+    .posters-stage {
+        padding: 2rem 1rem 3rem;
+        justify-content: center;
+    }
+
+    .poster { width: 160px; min-height: 240px; }
+    .poster-name { font-size: 1.2rem; }
+
+    .footer-content { flex-direction: column; align-items: flex-start; }
+    .footer-links { flex-wrap: wrap; gap: 1rem; }
+}
+
+@media (max-width: 480px) {
+    .poster { width: 140px; margin: 0.6rem; }
+}

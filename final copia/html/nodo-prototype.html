@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NODO — Cultura Senza Filtri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #111111;
+    --surface: #1a1a1a;
+    --surface2: #222222;
+    --border: rgba(244,244,240,0.12);
+    --border-strong: rgba(244,244,240,0.25);
+    --text: #F4F4F0;
+    --muted: rgba(244,244,240,0.45);
+    --accent: #CCFF00;
+    --accent-dim: rgba(204,255,0,0.15);
+    --red: #FF5555;
+    --font-head: 'Space Grotesk', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-mono);overflow-x:hidden;min-height:100vh}
+
+/* ── TICKER ── */
+.ticker{background:var(--accent);color:#111;font-family:var(--font-mono);font-size:0.72rem;font-weight:700;padding:0.45rem 0;overflow:hidden;white-space:nowrap;border-bottom:2px solid #111}
+.ticker__track{display:inline-block;animation:tick 30s linear infinite}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── NAVBAR ── */
+.nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2.5rem;border-bottom:1.5px solid var(--border);position:sticky;top:0;background:rgba(17,17,17,0.96);backdrop-filter:blur(8px);z-index:100}
+.nav__logo{font-family:var(--font-head);font-size:1.6rem;font-weight:700;letter-spacing:-2px;text-transform:uppercase;cursor:pointer}
+.nav__logo span{color:var(--accent)}
+.nav__links{display:flex;gap:1.5rem;align-items:center}
+.nav__link{font-size:0.75rem;font-weight:700;text-transform:uppercase;color:var(--muted);text-decoration:none;letter-spacing:0.05em;transition:color 0.15s;cursor:pointer}
+.nav__link:hover,.nav__link.active{color:var(--text)}
+.nav__actions{display:flex;gap:0.7rem;align-items:center}
+.nav__btn{font-family:var(--font-mono);font-size:0.72rem;font-weight:700;text-transform:uppercase;padding:0.5rem 1rem;border:1.5px solid var(--border-strong);background:transparent;color:var(--text);cursor:pointer;transition:all 0.15s;letter-spacing:0.03em}
+.nav__btn:hover{background:var(--surface2);border-color:var(--text)}
+.nav__btn--accent{background:var(--accent);color:#111;border-color:var(--accent)}
+.nav__btn--accent:hover{background:#fff;border-color:#111}
+.nav__notif{position:relative}
+.notif-dot{position:absolute;top:-3px;right:-3px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg)}
+
+/* ── PAGES ── */
+.page{display:none;min-height:calc(100vh - 120px)}
+.page.active{display:block}
+
+/* ── HERO (landing) ── */
+.hero{min-height:calc(100vh - 100px);display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4rem;padding:5rem 2.5rem 4rem;border-bottom:1.5px solid var(--border);position:relative}
+.hero__eyebrow{font-size:0.72rem;font-weight:700;background:var(--text);color:var(--bg);padding:0.2rem 0.55rem;display:inline-block;margin-bottom:1.2rem}
+.hero__h1{font-family:var(--font-head);font-size:clamp(4rem,8vw,7rem);font-weight:700;text-transform:uppercase;letter-spacing:-4px;line-height:0.9;margin-bottom:1.5rem}
+.hero__h1 span{-webkit-text-stroke:2px var(--accent);color:transparent;display:block}
+.hero__sub{font-size:0.88rem;line-height:1.7;color:var(--muted);margin-bottom:2.5rem;max-width:400px}
+.hero__cta{display:flex;gap:1rem;flex-wrap:wrap}
+.btn{font-family:var(--font-mono);font-size:0.8rem;font-weight:700;text-transform:uppercase;padding:0.85rem 1.8rem;border:2px solid var(--border-strong);display:inline-block;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s,background 0.12s;letter-spacing:0.03em;text-decoration:none;box-shadow:4px 4px 0 var(--border-strong)}
+.btn--primary{background:var(--accent);color:#111;border-color:var(--accent);box-shadow:4px 4px 0 rgba(204,255,0,0.3)}
+.btn--primary:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(204,255,0,0.3)}
+.btn--ghost{background:transparent;color:var(--text)}
+.btn--ghost:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--border)}
+.btn--sm{font-size:0.7rem;padding:0.55rem 1rem;box-shadow:3px 3px 0 var(--border)}
+
+/* ── STATS ── */
+.stats-bar{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1.5px solid var(--border)}
+.stat{padding:2.5rem 2.5rem;border-right:1.5px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat__n{font-family:var(--font-head);font-size:3.2rem;font-weight:700;color:var(--accent);letter-spacing:-3px;line-height:1}
+.stat__l{font-size:0.68rem;font-weight:700;text-transform:uppercase;color:var(--muted);margin-top:0.3rem;letter-spacing:0.05em}
+
+/* ── LIVE ACTIVITY FEED ── */
+.activity-bar{padding:1.5rem 2.5rem;border-bottom:1.5px solid var(--border);display:flex;gap:1.5rem;overflow-x:auto;scrollbar-width:none;align-items:center}
+.activity-bar::-webkit-scrollbar{display:none}
+.activity-item{flex:0 0 auto;display:flex;align-items:center;gap:0.6rem;font-size:0.7rem;color:var(--muted);white-space:nowrap}
+.activity-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.activity-item strong{color:var(--text);font-weight:700}
+.activity-sep{color:var(--border-strong);font-size:0.9rem}
+
+/* ── MARQUEE ── */
+.marquee{border-top:1.5px solid var(--border);border-bottom:1.5px solid var(--border);padding:0.8rem 0;overflow:hidden;background:var(--accent);white-space:nowrap}
+.marquee__track{display:inline-block;font-family:var(--font-head);font-size:1rem;font-weight:700;color:#111;animation:marquee 22s linear infinite;letter-spacing:0.02em}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── PREVIEW CARDS ── */
+.hero__preview{position:relative;height:380px}
+.pcard{position:absolute;background:var(--surface);border:1.5px solid var(--border-strong);padding:1rem 1.2rem;width:230px;box-shadow:5px 5px 0 var(--border-strong);transition:transform 0.3s}
+.pcard:hover{transform:translate(-3px,-3px) !important}
+.pcard--1{top:0;left:10%;transform:rotate(-2deg);z-index:3}
+.pcard--2{top:28%;right:5%;transform:rotate(3deg);z-index:2}
+.pcard--3{bottom:0;left:18%;transform:rotate(-1deg);z-index:4}
+.pcard__tag{font-size:0.6rem;font-weight:700;text-transform:uppercase;background:var(--text);color:var(--bg);padding:0.12rem 0.45rem;display:inline-block;margin-bottom:0.6rem}
+.pcard__name{font-family:var(--font-head);font-size:0.95rem;font-weight:700;text-transform:uppercase;letter-spacing:-0.5px;margin-bottom:0.25rem}
+.pcard__zone{font-size:0.62rem;color:var(--muted)}
+.pcard__live{display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem;font-size:0.6rem;font-weight:700;color:var(--accent)}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:pulse 1.2s infinite}
+
+/* ── LABEL TAG ── */
+.label{font-size:0.72rem;font-weight:700;background:var(--text);color:var(--bg);padding:0.2rem 0.55rem;display:inline-block;font-family:var(--font-mono)}
+.label--accent{background:var(--accent);color:#111}
+
+/* ── SECTIONS ── */
+.section{padding:4rem 2.5rem;border-bottom:1.5px solid var(--border)}
+.section__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem}
+.section__title{font-family:var(--font-head);font-size:1.5rem;font-weight:700;text-transform:uppercase;letter-spacing:-1px}
+.link{font-size:0.7rem;font-weight:700;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1.5px solid var(--accent);padding-bottom:1px;cursor:pointer;transition:color 0.15s}
+.link:hover{color:var(--accent)}
+
+/* ── SPOT CARDS ── */
+.spots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.spot{background:var(--surface);border:1.5px solid var(--border);box-shadow:4px 4px 0 var(--border);overflow:hidden;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s}
+.spot:hover{transform:translate(-3px,-3px);box-shadow:7px 7px 0 var(--border-strong)}
+.spot__img{height:160px;background:var(--surface2);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2.5rem}
+.spot__overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(17,17,17,0.6) 0%,transparent 60%)}
+.spot__checkins{position:absolute;bottom:0.6rem;right:0.6rem;font-size:0.58rem;font-weight:700;background:var(--accent);color:#111;padding:0.15rem 0.45rem;display:flex;align-items:center;gap:0.3rem}
+.spot__body{padding:1rem 1.1rem 1.2rem}
+.spot__tag{font-size:0.58rem;font-weight:700;text-transform:uppercase;background:var(--text);color:var(--bg);padding:0.1rem 0.4rem;display:inline-block;margin-bottom:0.5rem}
+.spot__name{font-family:var(--font-head);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:-0.5px;margin-bottom:0.4rem}
+.spot__vibe{font-size:0.7rem;line-height:1.5;color:var(--muted);margin-bottom:0.7rem}
+.spot__foot{display:flex;justify-content:space-between;align-items:center}
+.spot__zone{font-size:0.62rem;color:rgba(244,244,240,0.3)}
+.spot__actions{display:flex;gap:0.5rem}
+.icon-btn{background:transparent;border:1.5px solid var(--border);color:var(--muted);font-size:0.65rem;font-weight:700;padding:0.3rem 0.6rem;cursor:pointer;font-family:var(--font-mono);transition:all 0.15s}
+.icon-btn:hover{border-color:var(--text);color:var(--text)}
+.icon-btn.saved{border-color:var(--accent);color:var(--accent)}
+.icon-btn.checked{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+
+/* ── VOCI (feed spot) ── */
+.voci-feed{display:flex;flex-direction:column;gap:0.8rem}
+.voce{background:var(--surface);border:1.5px solid var(--border);padding:1rem 1.2rem;position:relative}
+.voce__meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem}
+.voce__author{font-size:0.65rem;font-weight:700;color:var(--accent)}
+.voce__time{font-size:0.6rem;color:var(--muted)}
+.voce__spot{font-size:0.6rem;color:var(--muted);margin-bottom:0.4rem}
+.voce__text{font-size:0.82rem;line-height:1.55;color:var(--text)}
+.voce__likes{display:flex;align-items:center;gap:0.4rem;margin-top:0.7rem;font-size:0.62rem;color:var(--muted);cursor:pointer;width:fit-content;transition:color 0.15s}
+.voce__likes:hover{color:var(--text)}
+.voce__likes.liked{color:var(--accent)}
+
+/* ── ZONA IN EVIDENZA ── */
+.zona-section{padding:4rem 2.5rem;border-bottom:1.5px solid var(--border);background:var(--surface)}
+.zona__header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2rem}
+.zona__name{font-family:var(--font-head);font-size:clamp(3rem,6vw,5rem);font-weight:700;text-transform:uppercase;letter-spacing:-4px;line-height:0.9;-webkit-text-stroke:2px var(--border-strong);color:transparent}
+.zona__name span{-webkit-text-stroke:0;color:var(--accent)}
+.zona__desc{font-size:0.78rem;color:var(--muted);max-width:300px;line-height:1.6}
+.zona__spots{display:flex;gap:1rem;overflow-x:auto;scrollbar-width:none;padding-bottom:0.5rem}
+.zona__spots::-webkit-scrollbar{display:none}
+.zona-chip{flex:0 0 200px;background:var(--bg);border:1.5px solid var(--border);padding:1rem;cursor:pointer;transition:all 0.15s;box-shadow:3px 3px 0 var(--border)}
+.zona-chip:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--border-strong);border-color:var(--border-strong)}
+.zona-chip__emoji{font-size:1.4rem;margin-bottom:0.5rem;display:block}
+.zona-chip__name{font-family:var(--font-head);font-size:0.9rem;font-weight:700;text-transform:uppercase;letter-spacing:-0.5px}
+.zona-chip__cat{font-size:0.6rem;color:var(--muted);margin-top:0.2rem}
+
+/* ── MOOD FILTER ── */
+.mood-section{padding:3rem 2.5rem;border-bottom:1.5px solid var(--border)}
+.moods{display:flex;gap:0.8rem;flex-wrap:wrap;margin-top:1.5rem}
+.mood{font-family:var(--font-mono);font-size:0.75rem;font-weight:700;padding:0.7rem 1.2rem;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:0.02em}
+.mood:hover{border-color:var(--border-strong);color:var(--text)}
+.mood.active{background:var(--accent);color:#111;border-color:var(--accent)}
+
+/* ── CHECKIN LIVE MAP ── */
+.live-section{padding:4rem 2.5rem;border-bottom:1.5px solid var(--border)}
+.live-map{background:var(--surface);border:1.5px solid var(--border);height:320px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-top:1.5rem}
+.live-map__grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:0.5}
+.live-dot-map{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+.live-dot-map::before{content:'';position:absolute;inset:-6px;border-radius:50%;background:var(--accent);opacity:0.2;animation:ripple 2s infinite}
+@keyframes ripple{0%{transform:scale(0.8);opacity:0.3}100%{transform:scale(2);opacity:0}}
+.live-dot-map--hot{background:#ff6b35}
+.live-dot-map--hot::before{background:#ff6b35}
+.live-map__label{position:absolute;font-size:0.6rem;font-weight:700;color:var(--muted);white-space:nowrap}
+.live-count-badge{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:0.55rem;font-weight:700;background:var(--surface);border:1.5px solid var(--border);padding:0.1rem 0.35rem;white-space:nowrap;color:var(--text)}
+
+/* ── PLAYLIST ── */
+.playlists-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.2rem}
+.playlist-card{background:var(--surface);border:1.5px solid var(--border);box-shadow:4px 4px 0 var(--border);padding:1.3rem;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s}
+.playlist-card:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--border-strong)}
+.playlist-card__spots{display:flex;gap:4px;margin-bottom:0.9rem;height:40px}
+.playlist-spot-mini{flex:1;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem}
+.playlist-card__name{font-family:var(--font-head);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:-0.5px;margin-bottom:0.25rem}
+.playlist-card__meta{font-size:0.65rem;color:var(--muted)}
+.playlist-card__author{font-size:0.62rem;color:var(--muted);margin-top:0.6rem;display:flex;justify-content:space-between;align-items:center}
+.playlist-card__share{font-size:0.6rem;font-weight:700;color:var(--accent);background:transparent;border:none;cursor:pointer;font-family:var(--font-mono)}
+
+/* ── PAGINA PLAYLIST ── */
+.pl-hero{padding:3.5rem 2.5rem 2.5rem;border-bottom:1.5px solid var(--border);background:var(--surface)}
+.pl-hero__title{font-family:var(--font-head);font-size:clamp(2.5rem,5vw,4rem);font-weight:700;text-transform:uppercase;letter-spacing:-3px;line-height:1;margin-bottom:0.7rem}
+.pl-hero__meta{font-size:0.75rem;color:var(--muted);display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap}
+.pl-hero__actions{display:flex;gap:0.8rem;margin-top:1.5rem;flex-wrap:wrap}
+
+/* ── NEW PLAYLIST FORM ── */
+.form-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;align-items:center;justify-content:center}
+.form-overlay.open{display:flex}
+.form-modal{background:var(--surface);border:2px solid var(--border-strong);padding:2rem;width:min(500px,90vw);box-shadow:8px 8px 0 var(--border-strong);position:relative}
+.form-modal h2{font-family:var(--font-head);font-size:1.4rem;font-weight:700;text-transform:uppercase;letter-spacing:-1px;margin-bottom:1.5rem}
+.form-group{margin-bottom:1.2rem}
+.form-group label{display:block;font-size:0.68rem;font-weight:700;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;letter-spacing:0.05em}
+.form-input{width:100%;background:var(--bg);color:var(--text);border:1.5px solid var(--border-strong);padding:0.75rem 1rem;font-family:var(--font-mono);font-size:0.85rem;outline:none;transition:border-color 0.15s}
+.form-input:focus{border-color:var(--accent)}
+.form-close{position:absolute;top:1rem;right:1rem;background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem;font-family:var(--font-mono);transition:color 0.15s}
+.form-close:hover{color:var(--text)}
+
+/* ── AUTH ── */
+.auth-wrap{max-width:440px;margin:5rem auto;padding:0 2rem}
+.auth-card{background:var(--surface);border:2px solid var(--border-strong);padding:2.5rem;box-shadow:8px 8px 0 var(--border)}
+.auth-card h1{font-family:var(--font-head);font-size:2rem;font-weight:700;text-transform:uppercase;letter-spacing:-2px;margin-bottom:0.5rem}
+.auth-card p{font-size:0.78rem;color:var(--muted);margin-bottom:2rem;line-height:1.6}
+.auth-tabs{display:flex;gap:0;margin-bottom:2rem;border:1.5px solid var(--border-strong)}
+.auth-tab{flex:1;padding:0.65rem;font-family:var(--font-mono);font-size:0.72rem;font-weight:700;text-transform:uppercase;background:transparent;color:var(--muted);border:none;cursor:pointer;transition:all 0.15s}
+.auth-tab.active{background:var(--accent);color:#111}
+.auth-social{display:flex;flex-direction:column;gap:0.8rem;margin-top:1.5rem}
+.auth-sep{text-align:center;font-size:0.65rem;color:var(--muted);margin:1rem 0;position:relative}
+.auth-sep::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border)}
+.auth-sep span{background:var(--surface);padding:0 0.8rem;position:relative}
+
+/* ── PROFILO ── */
+.profile-header{padding:3.5rem 2.5rem 2.5rem;border-bottom:1.5px solid var(--border);display:flex;gap:2rem;align-items:flex-end}
+.profile-avatar{width:80px;height:80px;background:var(--surface2);border:2px solid var(--border-strong);display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:2rem;font-weight:700;letter-spacing:-2px;color:var(--accent);flex-shrink:0}
+.profile-info h1{font-family:var(--font-head);font-size:2.2rem;font-weight:700;text-transform:uppercase;letter-spacing:-2px;line-height:1}
+.profile-info p{font-size:0.75rem;color:var(--muted);margin-top:0.3rem}
+.profile-stats{display:flex;gap:1.5rem;margin-top:0.8rem}
+.profile-stat{text-align:center}
+.profile-stat__n{font-family:var(--font-head);font-size:1.5rem;font-weight:700;color:var(--accent);letter-spacing:-1px}
+.profile-stat__l{font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
+.badges{display:flex;gap:0.5rem;margin-top:0.8rem;flex-wrap:wrap}
+.badge{font-size:0.62rem;font-weight:700;padding:0.2rem 0.55rem;background:var(--surface2);border:1.5px solid var(--border);color:var(--muted)}
+.badge--earned{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+
+/* ── SPOT DETAIL OVERLAY ── */
+.spot-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:150;overflow-y:auto}
+.spot-overlay.open{display:block}
+.spot-detail{background:var(--surface);max-width:680px;margin:3rem auto;border:2px solid var(--border-strong);box-shadow:8px 8px 0 var(--border-strong)}
+.spot-detail__img{height:250px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:4rem;border-bottom:1.5px solid var(--border);position:relative}
+.spot-detail__close{position:absolute;top:1rem;right:1rem;background:var(--bg);border:1.5px solid var(--border-strong);color:var(--text);font-size:1rem;font-family:var(--font-mono);font-weight:700;padding:0.4rem 0.8rem;cursor:pointer}
+.spot-detail__body{padding:1.8rem 2rem}
+.spot-detail__actions{display:flex;gap:0.8rem;flex-wrap:wrap;margin-top:1.5rem;padding-top:1.5rem;border-top:1.5px solid var(--border)}
+.share-toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--accent);color:#111;font-family:var(--font-mono);font-size:0.75rem;font-weight:700;padding:0.65rem 1.5rem;z-index:300;opacity:0;transition:opacity 0.3s;pointer-events:none}
+.share-toast.show{opacity:1}
+
+/* ── RISK SECTION ── */
+.risk-section{padding:4rem 2.5rem;border-bottom:1.5px solid var(--border)}
+.risk-list{display:flex;flex-direction:column;gap:0.8rem;margin-top:1.5rem}
+.risk-item{background:var(--surface);border:1.5px solid rgba(255,85,85,0.3);padding:1rem 1.2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;cursor:pointer;transition:border-color 0.15s}
+.risk-item:hover{border-color:var(--red)}
+.risk-item__info{flex:1}
+.risk-item__name{font-family:var(--font-head);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:-0.5px;margin-bottom:0.2rem}
+.risk-item__reason{font-size:0.7rem;color:var(--muted);line-height:1.4}
+.risk-item__status{font-size:0.65rem;font-weight:700;padding:0.25rem 0.6rem;background:rgba(255,85,85,0.1);color:var(--red);border:1px solid rgba(255,85,85,0.3);white-space:nowrap}
+.risk-item__status--warn{background:rgba(255,107,53,0.1);color:#ff6b35;border-color:rgba(255,107,53,0.3)}
+.risk-solidarity{background:rgba(204,255,0,0.05);border:1.5px solid var(--accent);padding:1.2rem 1.5rem;margin-top:1.2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.risk-solidarity p{font-size:0.78rem;color:var(--muted);max-width:400px;line-height:1.6}
+
+/* ── FOOTER ── */
+.footer{background:var(--text);color:var(--bg);padding:2.5rem 2.5rem 2rem;border-top:3px solid var(--bg)}
+.footer__inner{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1.5rem}
+.footer__logo{font-family:var(--font-head);font-size:2rem;font-weight:700;letter-spacing:-2px}
+.footer__logo span{color:var(--accent)}
+.footer__links{display:flex;gap:1.5rem;font-size:0.78rem;font-weight:700}
+.footer__links a{color:var(--bg);text-decoration:none;border-bottom:2px solid transparent;transition:border-color 0.15s}
+.footer__links a:hover{border-color:var(--bg)}
+.footer__bottom{border-top:2px solid var(--bg);padding-top:1.2rem;font-size:0.68rem;font-weight:700;text-align:center;opacity:0.5;font-family:var(--font-mono)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+    .hero{grid-template-columns:1fr;padding:3rem 1.5rem;min-height:auto}
+    .hero__preview{display:none}
+    .stats-bar{grid-template-columns:1fr 1fr}
+    .stat:nth-child(3){border-right:none;border-top:1.5px solid var(--border)}
+    .spots-grid{grid-template-columns:1fr}
+    .nav__links{display:none}
+    .nav{padding:1rem 1.5rem}
+    .section{padding:3rem 1.5rem}
+    .zona-section{padding:3rem 1.5rem}
+    .live-section{padding:3rem 1.5rem}
+    .mood-section{padding:2.5rem 1.5rem}
+    .profile-header{flex-direction:column;align-items:flex-start;padding:2.5rem 1.5rem}
+    .auth-wrap{margin:2rem auto}
+}
+@media(max-width:600px){
+    .hero__h1{letter-spacing:-2px}
+    .stats-bar{grid-template-columns:1fr}
+    .stat{border-right:none;border-bottom:1.5px solid var(--border)}
+    .stat:last-child{border-bottom:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ── TOAST ── -->
+<div class="share-toast" id="toast">/// LINK COPIATO</div>
+
+<!-- ── TICKER ── -->
+<div class="ticker">
+    <div class="ticker__track">
+        🔴 LIVE &nbsp;·&nbsp; 3 nuovi spot aggiunti oggi &nbsp;·&nbsp; Forte Prenestino: serate techno ogni venerdi &nbsp;·&nbsp; 
+        Nuova voce su RASHOMON: "caffè a 1€ ancora, non dite niente" &nbsp;·&nbsp; 
+        EX-SNIA VISCOSA segnalata a rischio: firmala anche tu &nbsp;·&nbsp;
+        🔴 LIVE &nbsp;·&nbsp; 3 nuovi spot aggiunti oggi &nbsp;·&nbsp; Forte Prenestino: serate techno ogni venerdi &nbsp;·&nbsp; 
+        Nuova voce su RASHOMON: "caffè a 1€ ancora, non dite niente" &nbsp;·&nbsp; 
+        EX-SNIA VISCOSA segnalata a rischio: firmala anche tu &nbsp;·&nbsp;
+    </div>
+</div>
+
+<!-- ── NAVBAR ── -->
+<nav class="nav">
+    <div class="nav__logo" onclick="showPage('home')">NO<span>DO</span></div>
+    <div class="nav__links">
+        <span class="nav__link active" onclick="switchNav(this);showPage('home')">Home</span>
+        <span class="nav__link" onclick="switchNav(this);showPage('mappa')">Mappa</span>
+        <span class="nav__link" onclick="switchNav(this);showPage('eventi')">Scene</span>
+        <span class="nav__link" onclick="switchNav(this);showPage('playlist')">Playlist</span>
+        <span class="nav__link" onclick="switchNav(this);showPage('rischio')">A Rischio</span>
+    </div>
+    <div class="nav__actions">
+        <button class="nav__btn nav__notif" onclick="showPage('home')">
+            <span>🔔</span>
+            <span class="notif-dot"></span>
+        </button>
+        <button class="nav__btn" onclick="showPage('profilo')" id="nav-profilo-btn">Profilo</button>
+        <button class="nav__btn nav__btn--accent" onclick="showPage('auth')" id="nav-auth-btn">Entra →</button>
+    </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     PAGE: HOME (landing/home condizionale)
+══════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+    <!-- HERO (non loggato) -->
+    <div id="hero-landing">
+        <section class="hero">
+            <div class="hero__content">
+                <div class="hero__eyebrow">/// ROMA</div>
+                <h1 class="hero__h1">CIAOLA<span>LALLA</span></h1>
+                <p class="hero__sub">Spot, eventi e attività a Roma. Non una guida turistica — la città come la conosce chi ci vive.</p>
+                <div class="hero__cta">
+                    <button class="btn btn--primary" onclick="showPage('mappa')">Esplora la mappa →</button>
+                    <button class="btn btn--ghost" onclick="showPage('auth')">Entra in NODO</button>
+                </div>
+            </div>
+            <div class="hero__preview">
+                <div class="pcard pcard--1">
+                    <div class="pcard__tag">✊ CENTRO SOCIALE</div>
+                    <div class="pcard__name">Forte Prenestino</div>
+                    <div class="pcard__zone">📍 Prenestino</div>
+                    <div class="pcard__live"><span class="live-dot"></span>23 check-in oggi</div>
+                </div>
+                <div class="pcard pcard--2">
+                    <div class="pcard__tag">📚 STUDIO</div>
+                    <div class="pcard__name">Biblioteca Nazionale</div>
+                    <div class="pcard__zone">📍 Castro Pretorio</div>
+                </div>
+                <div class="pcard pcard--3">
+                    <div class="pcard__tag">🏳️‍🌈 QUEER</div>
+                    <div class="pcard__name">Muccassassina</div>
+                    <div class="pcard__zone">📍 Testaccio</div>
+                    <div class="pcard__live"><span class="live-dot"></span>47 check-in oggi</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATS -->
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat__n" id="cnt-spots">0</div>
+                <div class="stat__l">Spot su NODO</div>
+            </div>
+            <div class="stat">
+                <div class="stat__n" id="cnt-zone">0</div>
+                <div class="stat__l">Zone di Roma</div>
+            </div>
+            <div class="stat">
+                <div class="stat__n" id="cnt-week">0</div>
+                <div class="stat__l">Aggiunti questa settimana</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOME (loggato) — mostrata se auth -->
+    <div id="hero-home" style="display:none">
+        <div style="padding:3rem 2.5rem 1.5rem;border-bottom:1.5px solid var(--border)">
+            <div class="label label--accent" style="margin-bottom:0.8rem">/// BENTORNATO/A</div>
+            <h1 style="font-family:var(--font-head);font-size:clamp(2rem,5vw,3.5rem);font-weight:700;text-transform:uppercase;letter-spacing:-3px;line-height:1">
+                Ciao, <span style="color:var(--accent)" id="home-name">Marco</span>
+            </h1>
+            <p style="font-size:0.82rem;color:var(--muted);margin-top:0.5rem" id="home-subline">Ecco cosa bolle a Roma stanotte.</p>
+            <div style="display:flex;gap:0.8rem;margin-top:1.5rem;flex-wrap:wrap">
+                <button class="btn btn--primary btn--sm" onclick="showPage('mappa')">🗺 Esplora</button>
+                <button class="btn btn--ghost btn--sm" onclick="openNewPlaylist()">✚ Nuova playlist</button>
+                <button class="btn btn--ghost btn--sm" onclick="showPage('segnala')">📍 Segnala spot</button>
+                <button class="btn btn--ghost btn--sm" onclick="showPage('profilo')">👤 Il mio profilo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIVITY FEED -->
+    <div class="activity-bar">
+        <div class="activity-item"><span class="activity-dot"></span><strong>@giulia_</strong> ha salvato <strong>Rashōmon Books</strong></div>
+        <div class="activity-sep">·</div>
+        <div class="activity-item"><span class="activity-dot"></span><strong>@marco_rmc</strong> ha fatto check-in a <strong>Forte Prenestino</strong></div>
+        <div class="activity-sep">·</div>
+        <div class="activity-item"><span class="activity-dot"></span><strong>@vale</strong> ha aggiunto una voce su <strong>Ex-Snia Viscosa</strong></div>
+        <div class="activity-sep">·</div>
+        <div class="activity-item"><span class="activity-dot"></span><strong>@fede_skate</strong> ha segnalato <strong>Skatepark Colle Oppio</strong></div>
+        <div class="activity-sep">·</div>
+        <div class="activity-item"><span class="activity-dot"></span><strong>@luca_not</strong> ha creato la playlist <strong>"Giro Est Notturno"</strong></div>
+    </div>
+
+    <!-- MARQUEE -->
+    <div class="marquee">
+        <div class="marquee__track">
+            SPAZI ✦ EVENTI ✦ ATTIVITÀ ✦ CLUBBING ✦ STUDIO ✦ QUEER ✦ SKATEPARK ✦ THRIFTING ✦ CONCERTI ✦ CENTRI SOCIALI ✦ SPAZI ✦ EVENTI ✦ ATTIVITÀ ✦ CLUBBING ✦ STUDIO ✦ QUEER ✦ SKATEPARK ✦ THRIFTING ✦ CONCERTI ✦ CENTRI SOCIALI ✦
+        </div>
+    </div>
+
+    <!-- MOOD FILTER -->
+    <div class="mood-section">
+        <div class="label">/// COSA CERCHI STASERA?</div>
+        <div class="moods" id="moodContainer">
+            <button class="mood active" data-mood="tutti">Tutti gli spot</button>
+            <button class="mood" data-mood="perdermi">Voglio perdermi</button>
+            <button class="mood" data-mood="studiare">Studio in silenzio</button>
+            <button class="mood" data-mood="ballare">Voglio ballare</button>
+            <button class="mood" data-mood="economico">Spendo poco</button>
+            <button class="mood" data-mood="strana">Uscita strana</button>
+            <button class="mood" data-mood="verde">Aria aperta</button>
+            <button class="mood" data-mood="libri">Libri e caffè</button>
+        </div>
+    </div>
+
+    <!-- SPOT IN EVIDENZA -->
+    <section class="section">
+        <div class="section__head">
+            <h2 class="section__title">Spot in evidenza</h2>
+            <span class="link" onclick="showPage('mappa')">Vedi tutti →</span>
+        </div>
+        <div class="spots-grid" id="spotGrid"></div>
+    </section>
+
+    <!-- ZONA IN EVIDENZA -->
+    <div class="zona-section">
+        <div class="zona__header">
+            <div>
+                <div class="label" style="margin-bottom:0.8rem">/// ZONA DELLA SETTIMANA</div>
+                <div class="zona__name">PIG<span>NET</span>O</div>
+            </div>
+            <p class="zona__desc">Il quartiere che non smette di sorprendere. Arte murale, centri sociali, trattorie storiche. Cambia, resiste, rimane.</p>
+        </div>
+        <div class="zona__spots" id="zonaSpots"></div>
+    </div>
+
+    <!-- LIVE CHECK-IN MAP -->
+    <div class="live-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem">
+            <div class="label label--accent">/// LIVE — CHI C'È ADESSO</div>
+            <span style="font-size:0.68rem;color:var(--muted)">Aggiornato 2 min fa</span>
+        </div>
+        <p style="font-size:0.75rem;color:var(--muted);margin-bottom:1rem;line-height:1.5">Ogni puntino è un check-in nelle ultime 2 ore. Quelli arancioni sono i posti hot stasera.</p>
+        <div class="live-map">
+            <div class="live-map__grid"></div>
+            <!-- Punti mock distribuiti su Roma -->
+            <div class="live-dot-map live-dot-map--hot" style="top:35%;left:28%">
+                <div class="live-count-badge">Forte Prenestino · 23</div>
+            </div>
+            <div class="live-dot-map live-dot-map--hot" style="top:55%;left:55%">
+                <div class="live-count-badge">Testaccio · 47</div>
+            </div>
+            <div class="live-dot-map" style="top:25%;left:60%">
+                <div class="live-count-badge">Pigneto · 11</div>
+            </div>
+            <div class="live-dot-map" style="top:48%;left:42%">
+                <div class="live-count-badge">Trastevere · 8</div>
+            </div>
+            <div class="live-dot-map" style="top:20%;left:48%">
+                <div class="live-count-badge">Ostiense · 15</div>
+            </div>
+            <div class="live-dot-map" style="top:65%;left:35%">
+                <div class="live-count-badge">EUR · 3</div>
+            </div>
+            <div class="live-map__label" style="bottom:1rem;right:1rem;font-size:0.55rem;color:var(--border-strong)">mappa stilizzata — non in scala</div>
+        </div>
+    </div>
+
+    <!-- VOCI RECENTI -->
+    <section class="section">
+        <div class="section__head">
+            <h2 class="section__title">Voci dagli spot</h2>
+            <span class="link">Tutte le voci →</span>
+        </div>
+        <div class="voci-feed" id="vociFeed"></div>
+    </section>
+
+    <!-- PLAYLIST PUBBLICHE -->
+    <section class="section">
+        <div class="section__head">
+            <h2 class="section__title">Playlist della community</h2>
+            <span class="link" onclick="showPage('playlist')">Vedi tutte →</span>
+        </div>
+        <div class="playlists-grid" id="playlistsHome"></div>
+    </section>
+
+    <!-- CTA FINALE -->
+    <section style="padding:7rem 2.5rem;border-bottom:1.5px solid var(--border);text-align:center">
+        <div class="label" style="margin-bottom:1.5rem">/// ENTRA IN NODO</div>
+        <h2 style="font-family:var(--font-head);font-size:clamp(2.5rem,5vw,4rem);font-weight:700;text-transform:uppercase;letter-spacing:-3px;line-height:1.05;margin-bottom:2.5rem">
+            Roma è più grande<br>di quanto pensi.
+        </h2>
+        <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap">
+            <button class="btn btn--primary" onclick="showPage('auth')">Registrati gratis →</button>
+            <button class="btn btn--ghost" onclick="showPage('mappa')">Esplora senza account</button>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer__inner">
+            <div class="footer__logo">NO<span>DO</span></div>
+            <div class="footer__links">
+                <a href="#">Instagram</a>
+                <a href="#">TikTok</a>
+                <a href="#">Telegram</a>
+                <span class="link" onclick="showPage('segnala')" style="font-size:0.78rem">Segnala uno spot</span>
+            </div>
+        </div>
+        <div class="footer__bottom">/// FATTO A ROMA DA GENTE CHE HA TROPPI POSTI NEI PREFERITI © 2026</div>
+    </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: MAPPA (stub)
+══════════════════════════════════════════ -->
+<div id="page-mappa" class="page">
+    <div style="padding:5rem 2.5rem;text-align:center;border-bottom:1.5px solid var(--border)">
+        <div class="label" style="margin-bottom:1.2rem">/// PULSE — LA MAPPA</div>
+        <h1 style="font-family:var(--font-head);font-size:3rem;font-weight:700;text-transform:uppercase;letter-spacing:-3px;margin-bottom:1rem">847 Spot a Roma</h1>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:2rem">La mappa interattiva è in pulse.html — qui sotto una preview dei filtri mood.</p>
+    </div>
+    <!-- Mood filter rimappato sulla mappa -->
+    <div class="mood-section">
+        <div class="label">/// FILTRA PER MOOD</div>
+        <div class="moods">
+            <button class="mood active">Tutti</button>
+            <button class="mood">Studio</button>
+            <button class="mood">Clubbing</button>
+            <button class="mood">Centri sociali</button>
+            <button class="mood">Parchi</button>
+            <button class="mood">Thrifting</button>
+            <button class="mood">Queer</button>
+        </div>
+    </div>
+    <section class="section">
+        <div class="spots-grid" id="spotGridMappa"></div>
+    </section>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: PLAYLIST
+══════════════════════════════════════════ -->
+<div id="page-playlist" class="page">
+    <div class="pl-hero">
+        <div class="label" style="margin-bottom:1rem">/// PLAYLIST</div>
+        <h1 class="pl-hero__title">Le tue mappe mentali di Roma</h1>
+        <div class="pl-hero__meta">
+            <span>Crea collezioni di spot · Condividile · Esplorale</span>
+        </div>
+        <div class="pl-hero__actions">
+            <button class="btn btn--primary btn--sm" onclick="openNewPlaylist()">✚ Nuova playlist</button>
+            <button class="btn btn--ghost btn--sm">Le mie playlist</button>
+            <button class="btn btn--ghost btn--sm">Community</button>
+        </div>
+    </div>
+    <section class="section">
+        <div class="section__head">
+            <h2 class="section__title">Playlist della community</h2>
+        </div>
+        <div class="playlists-grid" id="playlistsFull"></div>
+    </section>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: A RISCHIO
+══════════════════════════════════════════ -->
+<div id="page-rischio" class="page">
+    <div style="padding:3.5rem 2.5rem 2.5rem;border-bottom:1.5px solid var(--border);background:rgba(255,85,85,0.04)">
+        <div class="label" style="background:var(--red);color:#fff;margin-bottom:1rem">/// A RISCHIO</div>
+        <h1 style="font-family:var(--font-head);font-size:clamp(2.5rem,5vw,4rem);font-weight:700;text-transform:uppercase;letter-spacing:-3px;line-height:1;margin-bottom:0.8rem">Posti che rischiano<br>di sparire.</h1>
+        <p style="font-size:0.82rem;color:var(--muted);max-width:500px;line-height:1.6">Roma perde ogni anno pezzi della sua anima. Questi posti sono segnalati dalla community come a rischio di chiusura, sgombero o gentrificazione. Parla ne, difendili, non lasciarli soli.</p>
+    </div>
+    <div class="risk-section">
+        <div class="risk-list" id="riskList"></div>
+        <div class="risk-solidarity">
+            <p>Conosci un posto in pericolo? Segnalalo. Ogni voce conta. NODO è fatto da chi ama Roma abbastanza da arrabbiarsi.</p>
+            <button class="btn btn--primary btn--sm" onclick="showPage('segnala')">Segnala →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: PROFILO
+══════════════════════════════════════════ -->
+<div id="page-profilo" class="page">
+    <div class="profile-header">
+        <div class="profile-avatar" id="profile-avatar">MA</div>
+        <div class="profile-info">
+            <h1 id="profile-name">Marco</h1>
+            <p id="profile-handle">@marco_rmc · Su NODO dal 2026</p>
+            <div class="profile-stats">
+                <div class="profile-stat">
+                    <div class="profile-stat__n">7</div>
+                    <div class="profile-stat__l">Segnalati</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat__n" id="profile-saved-count">0</div>
+                    <div class="profile-stat__l">Salvati</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat__n">3</div>
+                    <div class="profile-stat__l">Playlist</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat__n">34</div>
+                    <div class="profile-stat__l">Check-in</div>
+                </div>
+            </div>
+            <div class="badges">
+                <span class="badge badge--earned">🏆 Scopritore</span>
+                <span class="badge badge--earned">📍 7 segnalazioni</span>
+                <span class="badge">🌙 Nottambulo — 10 check-in notturni</span>
+                <span class="badge">🎵 Clubber</span>
+            </div>
+        </div>
+    </div>
+    <section class="section">
+        <div class="section__head">
+            <h2 class="section__title">I tuoi spot salvati</h2>
+        </div>
+        <div class="spots-grid" id="spotGridProfile"></div>
+    </section>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: AUTH
+══════════════════════════════════════════ -->
+<div id="page-auth" class="page">
+    <div class="auth-wrap">
+        <div class="auth-card">
+            <h1>Entra<br>in NODO</h1>
+            <p>Salva posti, crea playlist, fai check-in, lascia voci. Costruisci la tua Roma.</p>
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab(this,'login')">Accedi</button>
+                <button class="auth-tab" onclick="switchAuthTab(this,'register')">Registrati</button>
+            </div>
+            <div id="auth-login">
+                <div class="form-group">
+                    <label>/// Email</label>
+                    <input type="email" class="form-input" placeholder="tu@roma.it" id="auth-email">
+                </div>
+                <div class="form-group">
+                    <label>/// Password</label>
+                    <input type="password" class="form-input" placeholder="••••••••" id="auth-pass">
+                </div>
+                <button class="btn btn--primary" style="width:100%" onclick="doLogin()">Accedi →</button>
+            </div>
+            <div id="auth-register" style="display:none">
+                <div class="form-group">
+                    <label>/// Come ti chiami?</label>
+                    <input type="text" class="form-input" placeholder="Il tuo nome" id="reg-name">
+                </div>
+                <div class="form-group">
+                    <label>/// Email</label>
+                    <input type="email" class="form-input" placeholder="tu@roma.it" id="reg-email">
+                </div>
+                <div class="form-group">
+                    <label>/// Password</label>
+                    <input type="password" class="form-input" placeholder="min 8 caratteri" id="reg-pass">
+                </div>
+                <button class="btn btn--primary" style="width:100%" onclick="doRegister()">Crea account →</button>
+            </div>
+            <div class="auth-sep"><span>oppure</span></div>
+            <div class="auth-social">
+                <button class="btn btn--ghost" style="width:100%;text-align:center" onclick="doLogin()">Continua con Google</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: SEGNALA
+══════════════════════════════════════════ -->
+<div id="page-segnala" class="page">
+    <div style="max-width:600px;margin:0 auto;padding:4rem 2rem">
+        <div class="label" style="margin-bottom:1.2rem">/// SEGNALA UNO SPOT</div>
+        <h1 style="font-family:var(--font-head);font-size:2.5rem;font-weight:700;text-transform:uppercase;letter-spacing:-2px;margin-bottom:2rem">Conosci<br>un posto che manca?</h1>
+        <div class="form-group">
+            <label>/// Nome del posto *</label>
+            <input type="text" class="form-input" placeholder="Es. Ex-Snia, Baretto di Via del Pigneto...">
+        </div>
+        <div class="form-group">
+            <label>/// Cos'è?</label>
+            <input type="text" class="form-input" placeholder="Centro sociale, libreria, club...">
+        </div>
+        <div class="form-group">
+            <label>/// Zona / Indirizzo</label>
+            <input type="text" class="form-input" placeholder="Es. Pigneto, Via Tiburtina 185...">
+        </div>
+        <div class="form-group">
+            <label>/// Perché spacca? *</label>
+            <textarea class="form-input" rows="4" placeholder="Dicci perché dovremmo andare. Prezzi? Atmosfera? Musica assurda?"></textarea>
+        </div>
+        <button class="btn btn--primary" style="width:100%;margin-top:0.5rem">Invia la segnalazione →</button>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: EVENTI (stub)
+══════════════════════════════════════════ -->
+<div id="page-eventi" class="page">
+    <div style="padding:3.5rem 2.5rem;border-bottom:1.5px solid var(--border)">
+        <div class="label" style="margin-bottom:1rem">/// SCENE — EVENTI</div>
+        <h1 style="font-family:var(--font-head);font-size:clamp(2.5rem,5vw,4rem);font-weight:700;text-transform:uppercase;letter-spacing:-3px;margin-bottom:0.8rem">Questa settimana<br>a Roma.</h1>
+        <p style="font-size:0.82rem;color:var(--muted)">La versione completa è in scene.html con i poster sul muro. Qui una preview.</p>
+    </div>
+    <div class="mood-section">
+        <div class="moods">
+            <button class="mood active">Tutti</button>
+            <button class="mood">Techno</button>
+            <button class="mood">Live</button>
+            <button class="mood">Mercato</button>
+            <button class="mood">Arte</button>
+            <button class="mood">Club</button>
+        </div>
+    </div>
+    <section class="section">
+        <div class="spots-grid" id="spotGridEventi"></div>
+    </section>
+</div>
+
+<!-- ── SPOT DETAIL OVERLAY ── -->
+<div class="spot-overlay" id="spotOverlay">
+    <div class="spot-detail">
+        <div class="spot-detail__img" id="sd-img">
+            <button class="spot-detail__close" onclick="closeSpotOverlay()">× chiudi</button>
+        </div>
+        <div class="spot-detail__body">
+            <div class="label" id="sd-tag" style="margin-bottom:0.8rem"></div>
+            <h2 style="font-family:var(--font-head);font-size:1.8rem;font-weight:700;text-transform:uppercase;letter-spacing:-1px;margin-bottom:0.5rem" id="sd-name"></h2>
+            <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem" id="sd-zone"></p>
+            <p style="font-size:0.85rem;line-height:1.6" id="sd-desc"></p>
+
+            <!-- Voci dello spot -->
+            <div style="margin-top:1.5rem">
+                <div class="label" style="margin-bottom:1rem">/// VOCI</div>
+                <div id="sd-voci"></div>
+                <div style="margin-top:1rem;display:flex;gap:0.7rem">
+                    <input type="text" class="form-input" placeholder="Lascia una voce anonima..." id="voce-input" style="flex:1">
+                    <button class="btn btn--primary btn--sm" onclick="addVoce()">→</button>
+                </div>
+            </div>
+
+            <div class="spot-detail__actions">
+                <button class="btn btn--primary btn--sm" id="sd-checkin" onclick="doCheckin()">Check-in adesso</button>
+                <button class="btn btn--ghost btn--sm" id="sd-save" onclick="doSave()">+ Salva</button>
+                <button class="btn btn--ghost btn--sm" onclick="copySpotLink()">🔗 Copia link</button>
+                <button class="btn btn--ghost btn--sm" onclick="shareWhatsapp()">WhatsApp</button>
+                <button class="btn btn--ghost btn--sm" onclick="shareTelegram()">Telegram</button>
+                <button class="btn btn--ghost btn--sm" id="sd-gmaps">↗ Google Maps</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── NEW PLAYLIST MODAL ── -->
+<div class="form-overlay" id="playlistModal">
+    <div class="form-modal">
+        <button class="form-close" onclick="closeNewPlaylist()">×</button>
+        <h2>Nuova Playlist</h2>
+        <div class="form-group">
+            <label>/// Nome</label>
+            <input type="text" class="form-input" placeholder="Es. Giro notturno est Roma" id="pl-name">
+        </div>
+        <div class="form-group">
+            <label>/// Descrizione</label>
+            <input type="text" class="form-input" placeholder="Una frase che la racconta" id="pl-desc">
+        </div>
+        <div class="form-group">
+            <label>/// Visibilità</label>
+            <select class="form-input" id="pl-vis">
+                <option>Pubblica</option>
+                <option>Solo io</option>
+                <option>Link condivisibile</option>
+            </select>
+        </div>
+        <button class="btn btn--primary" style="width:100%;margin-top:0.5rem" onclick="createPlaylist()">Crea playlist →</button>
+    </div>
+</div>
+
+<script>
+/* ══ DATI MOCK ══ */
+const SPOTS = [
+    {id:1,name:'Ex-Snia Viscosa',tag:'PARCO · CENTRO SOCIALE',zone:'Pigneto',emoji:'🌿',desc:'Parco con lago naturale in zona Pigneto. Centro sociale con attività culturali, concerti, mercati.',checkins:11,moods:['perdermi','verde','strana'],saved:false},
+    {id:2,name:'Forte Prenestino',tag:'CLUBBING · CENTRO SOCIALE',zone:'Prenestino',emoji:'✊',desc:'Centro sociale storico in un forte ottocentesco. Concerti, serate techno, mercatini anarchici.',checkins:23,moods:['ballare','strana','perdermi'],saved:false},
+    {id:3,name:'MAAM',tag:'ARTE · CULTURA',zone:'Casilino',emoji:'🎨',desc:'Ex fabbrica Fiorucci diventata museo abusivo abitato. Arte urbana da vedere almeno una volta.',checkins:6,moods:['perdermi','strana','libri'],saved:false},
+    {id:4,name:'Rashōmon Books',tag:'LIBRERIA · CAFFÈ',zone:'Pigneto',emoji:'📚',desc:'Libreria indipendente con caffè a 1€. Presentazioni, reading, gente strana nel senso buono.',checkins:8,moods:['libri','studiare','economico'],saved:false},
+    {id:5,name:'Muccassassina',tag:'QUEER · CLUBBING',zone:'Testaccio',emoji:'🏳️‍🌈',desc:'Serata queer storica di Roma. Ogni venerdì al Qube. Il posto per ballare senza pensare.',checkins:47,moods:['ballare','strana'],saved:false},
+    {id:6,name:'Skatepark Colle Oppio',tag:'SPORT · SKATE',zone:'Colosseo',emoji:'🛹',desc:'Skatepark gratuito vicino al Colosseo. Sessioni tutti i pomeriggi, eventi la domenica.',checkins:14,moods:['verde','perdermi','economico'],saved:false},
+];
+
+const VOCI_FEED = [
+    {id:1,spot:'Rashōmon Books',author:'@giulia_',time:'2h fa',text:'Caffè ancora a 1€. Non dite niente a nessuno o arriva la gentrificazione.',likes:34,liked:false},
+    {id:2,spot:'Forte Prenestino',author:'@marco_rmc',time:'4h fa',text:'Stasera dj set techno alle 23, ingresso libero. Portatevi i soldi solo per il bar.',likes:21,liked:false},
+    {id:3,spot:'Ex-Snia Viscosa',author:'@vale',time:'ieri',text:'Il lago è tornato bellissimo dopo le piogge. Andate di mattina presto se volete pace.',likes:18,liked:false},
+    {id:4,spot:'MAAM',author:'@luca_not',time:'2 giorni fa',text:'Ci vogliono almeno 2 ore. Non è un museo normale, è una cosa viva. Andate senza aspettative.',likes:45,liked:false},
+];
+
+const PLAYLISTS = [
+    {id:1,name:'Giro Notturno Est',desc:'Pigneto → Prenestino → Casilino dopo mezzanotte',spots:['🌿','✊','🎨'],author:'@luca_not',count:8,public:true},
+    {id:2,name:'Studio+Caffè',desc:'I migliori posti per studiare senza spendere',spots:['📚','☕','🏛️'],author:'@giula_stud',count:5,public:true},
+    {id:3,name:'Roma Queer',desc:'Spazi sicuri, eventi, serate LGBTQ+',spots:['🏳️‍🌈','🎭','✊'],author:'@vale',count:12,public:true},
+    {id:4,name:'Gratis o quasi',desc:'Tutto free o massimo 5€',spots:['🛹','🌿','📚'],author:'@fede_skate',count:9,public:true},
+];
+
+const ZONA_PIGNETO = [
+    {emoji:'📚',name:'Rashōmon Books',cat:'Libreria'},
+    {emoji:'🌿',name:'Ex-Snia Viscosa',cat:'Parco'},
+    {emoji:'🍕',name:'Pigneto Quarantuno',cat:'Baretto'},
+    {emoji:'🎨',name:'Muri di via Pesaro',cat:'Street art'},
+    {emoji:'🎵',name:'Circolo Fanfulla',cat:'Club'},
+];
+
+const RISCHI = [
+    {name:'Ex-Snia Viscosa',reason:'Progetto edilizio in zona. Firma la petizione per la tutela del lago artificiale.',status:'CRITICO'},
+    {name:'Forte Prenestino',reason:'Scadenza contratto d\'uso con il Comune entro fine anno. Situazione incerta.',status:'ATTENZIONE'},
+    {name:'Circolo Pigneto',reason:'Aumento affitto triplicato. Raccolta fondi in corso per sopravvivere.',status:'CRITICO'},
+    {name:'Mercato Esquilino',reason:'Ristrutturazione prevista potrebbe stravolgere l\'identità multiculturale.',status:'ATTENZIONE'},
+];
+
+/* ══ STATE ══ */
+let currentSpot = null;
+let userLoggedIn = false;
+let userName = 'Marco';
+let savedSpots = [];
+let vociMap = {};
+VOCI_FEED.forEach(v=>{ vociMap[v.id] = {...v}; });
+
+/* ══ COUNTER ANIMATO ══ */
+function animateCount(el,target,dur=1400){
+    let s=null;
+    const step=ts=>{
+        if(!s)s=ts;
+        const p=Math.min((ts-s)/dur,1);
+        const e=1-Math.pow(1-p,3);
+        el.textContent=Math.floor(e*target);
+        if(p<1)requestAnimationFrame(step);
+        else el.textContent=target;
+    };
+    requestAnimationFrame(step);
+}
+function initCounters(){
+    const obs=new IntersectionObserver(entries=>{
+        entries.forEach(e=>{
+            if(e.isIntersecting){
+                const el=e.target;
+                const t=parseInt(el.dataset.count);
+                animateCount(el,t);
+                obs.unobserve(el);
+            }
+        });
+    },{threshold:0.5});
+    document.querySelectorAll('[data-count]').forEach(el=>obs.observe(el));
+}
+
+/* ══ NAV ══ */
+function switchNav(el){
+    document.querySelectorAll('.nav__link').forEach(l=>l.classList.remove('active'));
+    el.classList.add('active');
+}
+function showPage(name){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    const el=document.getElementById('page-'+name);
+    if(el){el.classList.add('active');window.scrollTo(0,0);}
+    if(name==='profilo')renderProfile();
+    if(name==='playlist'){renderPlaylists('playlistsFull');}
+    if(name==='mappa')renderSpotGrid('spotGridMappa',SPOTS);
+    if(name==='eventi')renderSpotGrid('spotGridEventi',SPOTS.slice(1,5));
+}
+
+/* ══ RENDER SPOTS ══ */
+function renderSpotGrid(id,spots){
+    const container=document.getElementById(id);
+    if(!container)return;
+    container.innerHTML=spots.map(s=>`
+        <div class="spot" onclick="openSpot(${s.id})">
+            <div class="spot__img">
+                <span>${s.emoji}</span>
+                <div class="spot__overlay"></div>
+                ${s.checkins>0?`<div class="spot__checkins"><span class="live-dot" style="width:4px;height:4px"></span>${s.checkins} oggi</div>`:''}
+            </div>
+            <div class="spot__body">
+                <div class="spot__tag">${s.tag}</div>
+                <div class="spot__name">${s.name}</div>
+                <div class="spot__vibe">${s.desc.substring(0,80)}…</div>
+                <div class="spot__foot">
+                    <div class="spot__zone">📍 ${s.zone}</div>
+                    <div class="spot__actions">
+                        <button class="icon-btn ${savedSpots.includes(s.id)?'saved':''}" onclick="event.stopPropagation();toggleSave(${s.id},this)">${savedSpots.includes(s.id)?'★ Salvato':'☆ Salva'}</button>
+                        <button class="icon-btn" onclick="event.stopPropagation();doCheckinSpot(${s.id},this)">Check-in</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+/* ══ SPOT OVERLAY ══ */
+function openSpot(id){
+    const s=SPOTS.find(x=>x.id===id);
+    if(!s)return;
+    currentSpot=s;
+    document.getElementById('sd-img').innerHTML=`<span style="font-size:4rem">${s.emoji}</span><button class="spot-detail__close" onclick="closeSpotOverlay()">× chiudi</button>`;
+    document.getElementById('sd-tag').textContent=s.tag;
+    document.getElementById('sd-name').textContent=s.name;
+    document.getElementById('sd-zone').textContent='📍 '+s.zone;
+    document.getElementById('sd-desc').textContent=s.desc;
+    document.getElementById('sd-gmaps').onclick=()=>{
+        window.open(`https://maps.google.com/?q=${encodeURIComponent(s.name+' Roma')}`)
+    };
+    document.getElementById('sd-save').textContent=savedSpots.includes(s.id)?'★ Salvato':'+ Salva';
+    renderSpotVoci(s.id);
+    document.getElementById('spotOverlay').classList.add('open');
+    document.body.style.overflow='hidden';
+}
+function closeSpotOverlay(){
+    document.getElementById('spotOverlay').classList.remove('open');
+    document.body.style.overflow='';
+}
+function renderSpotVoci(spotId){
+    const voci=VOCI_FEED.filter(v=>v.spot===SPOTS.find(s=>s.id===spotId)?.name);
+    const container=document.getElementById('sd-voci');
+    if(!container)return;
+    container.innerHTML=voci.length?voci.map(v=>`
+        <div class="voce" style="margin-bottom:0.6rem">
+            <div class="voce__meta"><span class="voce__author">${v.author}</span><span class="voce__time">${v.time}</span></div>
+            <div class="voce__text">${v.text}</div>
+            <div class="voce__likes ${vociMap[v.id]?.liked?'liked':''}" onclick="toggleLike(${v.id},this)">
+                ♥ <span>${vociMap[v.id]?.likes||v.likes}</span>
+            </div>
+        </div>
+    `).join(''):`<p style="font-size:0.75rem;color:var(--muted)">Nessuna voce ancora. Sii il primo.</p>`;
+}
+function addVoce(){
+    const input=document.getElementById('voce-input');
+    const text=input.value.trim();
+    if(!text||!currentSpot)return;
+    const newVoce={id:Date.now(),spot:currentSpot.name,author:'@tu',time:'adesso',text,likes:0,liked:false};
+    VOCI_FEED.unshift(newVoce);
+    vociMap[newVoce.id]=newVoce;
+    input.value='';
+    renderSpotVoci(currentSpot.id);
+    renderVociFeed();
+    showToast('/// VOCE AGGIUNTA');
+}
+function toggleLike(id,el){
+    const v=vociMap[id];
+    if(!v)return;
+    v.liked=!v.liked;
+    v.likes=v.liked?v.likes+1:v.likes-1;
+    el.classList.toggle('liked',v.liked);
+    el.querySelector('span').textContent=v.likes;
+}
+
+/* ══ SAVE / CHECKIN ══ */
+function toggleSave(id,btn){
+    const idx=savedSpots.indexOf(id);
+    if(idx>-1){savedSpots.splice(idx,1);btn.textContent='☆ Salva';btn.classList.remove('saved');}
+    else{savedSpots.push(id);btn.textContent='★ Salvato';btn.classList.add('saved');showToast('/// SPOT SALVATO');}
+    updateProfileCount();
+}
+function doSave(){
+    if(!currentSpot)return;
+    const btn=document.getElementById('sd-save');
+    const idx=savedSpots.indexOf(currentSpot.id);
+    if(idx>-1){savedSpots.splice(idx,1);btn.textContent='+ Salva';}
+    else{savedSpots.push(currentSpot.id);btn.textContent='★ Salvato';showToast('/// SPOT SALVATO');}
+    updateProfileCount();
+}
+function doCheckin(){
+    if(!currentSpot)return;
+    const btn=document.getElementById('sd-checkin');
+    currentSpot.checkins++;
+    btn.textContent='✓ Fatto!';
+    btn.classList.add('checked');
+    showToast('/// CHECK-IN REGISTRATO');
+}
+function doCheckinSpot(id,btn){
+    const s=SPOTS.find(x=>x.id===id);
+    if(s)s.checkins++;
+    btn.textContent='✓';
+    btn.classList.add('checked');
+}
+function updateProfileCount(){
+    const el=document.getElementById('profile-saved-count');
+    if(el)el.textContent=savedSpots.length;
+}
+
+/* ══ SHARE ══ */
+function copySpotLink(){
+    const url=currentSpot?`https://nodo.roma/spot/${currentSpot.id}`:'https://nodo.roma';
+    navigator.clipboard.writeText(url).catch(()=>{});
+    showToast('/// LINK COPIATO');
+}
+function shareWhatsapp(){
+    if(!currentSpot)return;
+    const url=`https://wa.me/?text=${encodeURIComponent('Guarda questo posto su NODO: '+currentSpot.name+' ('+currentSpot.zone+') → https://nodo.roma/spot/'+currentSpot.id)}`;
+    window.open(url,'_blank');
+}
+function shareTelegram(){
+    if(!currentSpot)return;
+    const url=`https://t.me/share/url?url=${encodeURIComponent('https://nodo.roma/spot/'+currentSpot.id)}&text=${encodeURIComponent(currentSpot.name+' — '+currentSpot.zone+' · NODO Roma')}`;
+    window.open(url,'_blank');
+}
+function showToast(msg){
+    const t=document.getElementById('toast');
+    t.textContent=msg;
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* ══ RENDER FEEDS ══ */
+function renderVociFeed(){
+    const container=document.getElementById('vociFeed');
+    if(!container)return;
+    container.innerHTML=VOCI_FEED.slice(0,4).map(v=>`
+        <div class="voce">
+            <div class="voce__meta"><span class="voce__author">${v.author}</span><span class="voce__time">${v.time}</span></div>
+            <div class="voce__spot">${v.spot}</div>
+            <div class="voce__text">${v.text}</div>
+            <div class="voce__likes ${vociMap[v.id]?.liked?'liked':''}" onclick="toggleLike(${v.id},this)">
+                ♥ <span>${vociMap[v.id]?.likes||v.likes}</span>
+            </div>
+        </div>
+    `).join('');
+}
+function renderPlaylists(id){
+    const container=document.getElementById(id);
+    if(!container)return;
+    container.innerHTML=PLAYLISTS.map(pl=>`
+        <div class="playlist-card">
+            <div class="playlist-card__spots">${pl.spots.map(e=>`<div class="playlist-spot-mini">${e}</div>`).join('')}</div>
+            <div class="playlist-card__name">${pl.name}</div>
+            <div class="playlist-card__meta">${pl.count} spot · ${pl.desc}</div>
+            <div class="playlist-card__author">
+                <span>${pl.author}</span>
+                <button class="playlist-card__share" onclick="event.stopPropagation();copyPlaylistLink('${pl.id}')">🔗 Condividi</button>
+            </div>
+        </div>
+    `).join('');
+}
+function copyPlaylistLink(id){showToast('/// LINK PLAYLIST COPIATO');}
+function renderZonaSpots(){
+    const c=document.getElementById('zonaSpots');
+    if(!c)return;
+    c.innerHTML=ZONA_PIGNETO.map(s=>`
+        <div class="zona-chip">
+            <span class="zona-chip__emoji">${s.emoji}</span>
+            <div class="zona-chip__name">${s.name}</div>
+            <div class="zona-chip__cat">${s.cat}</div>
+        </div>
+    `).join('');
+}
+function renderRiskList(){
+    const c=document.getElementById('riskList');
+    if(!c)return;
+    c.innerHTML=RISCHI.map(r=>`
+        <div class="risk-item">
+            <div class="risk-item__info">
+                <div class="risk-item__name">${r.name}</div>
+                <div class="risk-item__reason">${r.reason}</div>
+            </div>
+            <div class="risk-item__status ${r.status==='ATTENZIONE'?'risk-item__status--warn':''}">${r.status}</div>
+        </div>
+    `).join('');
+}
+function renderProfile(){
+    updateProfileCount();
+    const saved=SPOTS.filter(s=>savedSpots.includes(s.id));
+    renderSpotGrid('spotGridProfile',saved.length?saved:SPOTS.slice(0,3));
+}
+
+/* ══ MOOD FILTER ══ */
+document.addEventListener('click',e=>{
+    if(e.target.classList.contains('mood')){
+        const parent=e.target.closest('.moods')||e.target.parentElement;
+        parent.querySelectorAll('.mood').forEach(m=>m.classList.remove('active'));
+        e.target.classList.add('active');
+        const mood=e.target.dataset.mood||'tutti';
+        const filtered=mood==='tutti'?SPOTS:SPOTS.filter(s=>s.moods&&s.moods.includes(mood));
+        renderSpotGrid('spotGrid',filtered.length?filtered:SPOTS);
+    }
+});
+
+/* ══ AUTH ══ */
+function switchAuthTab(btn,tab){
+    document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('auth-login').style.display=tab==='login'?'block':'none';
+    document.getElementById('auth-register').style.display=tab==='register'?'block':'none';
+}
+function doLogin(){
+    userLoggedIn=true;
+    userName=document.getElementById('auth-email')?.value?.split('@')[0]||'Marco';
+    applyAuthState();
+    showPage('home');
+    showToast('/// BENTORNATO/A');
+}
+function doRegister(){
+    userLoggedIn=true;
+    userName=document.getElementById('reg-name')?.value||'Marco';
+    applyAuthState();
+    showPage('home');
+    showToast('/// BENVENUTO/A IN NODO');
+}
+function applyAuthState(){
+    document.getElementById('hero-landing').style.display=userLoggedIn?'none':'block';
+    document.getElementById('hero-home').style.display=userLoggedIn?'block':'none';
+    document.getElementById('home-name').textContent=userName;
+    document.getElementById('profile-name').textContent=userName;
+    document.getElementById('profile-avatar').textContent=userName.substring(0,2).toUpperCase();
+    document.getElementById('nav-auth-btn').style.display=userLoggedIn?'none':'flex';
+    document.getElementById('nav-profilo-btn').style.display=userLoggedIn?'flex':'none';
+    const hour=new Date().getHours();
+    const lines=['Cosa fai stamattina a Roma?','Ecco cosa bolle oggi pomeriggio.','Serata libera? Roma ha qualcosa per te.','Notte fonda. I migliori posti sono ancora aperti.'];
+    const idx=hour<12?0:hour<17?1:hour<21?2:3;
+    const sl=document.getElementById('home-subline');
+    if(sl)sl.textContent=lines[idx];
+    const subline=document.getElementById('home-subline');
+    if(subline)subline.textContent=lines[idx];
+    // Aggiorna ora del giorno nel subline
+    if(hour>=21||hour<5){
+        const sl=document.getElementById('home-subline');
+        if(sl)sl.textContent='Notte fonda. I migliori posti sono ancora aperti.';
+    }
+}
+
+/* ══ PLAYLIST MODAL ══ */
+function openNewPlaylist(){
+    if(!userLoggedIn){showPage('auth');return;}
+    document.getElementById('playlistModal').classList.add('open');
+}
+function closeNewPlaylist(){document.getElementById('playlistModal').classList.remove('open');}
+function createPlaylist(){
+    const name=document.getElementById('pl-name').value.trim();
+    if(!name)return;
+    PLAYLISTS.unshift({id:Date.now(),name,desc:document.getElementById('pl-desc').value,spots:['✦','✦','✦'],author:'@'+userName.toLowerCase(),count:0,public:true});
+    closeNewPlaylist();
+    showToast('/// PLAYLIST CREATA');
+    renderPlaylists('playlistsHome');
+    renderPlaylists('playlistsFull');
+}
+
+/* ══ INIT ══ */
+document.addEventListener('DOMContentLoaded',()=>{
+    /* counter animati */
+    const c1=document.getElementById('cnt-spots');
+    const c2=document.getElementById('cnt-zone');
+    const c3=document.getElementById('cnt-week');
+    if(c1){
+        const obs=new IntersectionObserver(entries=>{
+            entries.forEach(e=>{if(e.isIntersecting){animateCount(c1,847);animateCount(c2,22);animateCount(c3,12);obs.disconnect();}});
+        },{threshold:0.3});
+        obs.observe(c1);
+    }
+
+    renderSpotGrid('spotGrid',SPOTS);
+    renderSpotGrid('spotGridMappa',SPOTS);
+    renderSpotGrid('spotGridEventi',SPOTS.slice(1,5));
+    renderVociFeed();
+    renderPlaylists('playlistsHome');
+    renderPlaylists('playlistsFull');
+    renderZonaSpots();
+    renderRiskList();
+    applyAuthState();
+
+    /* Close overlay on bg click */
+    document.getElementById('spotOverlay').addEventListener('click',e=>{
+        if(e.target===e.currentTarget)closeSpotOverlay();
+    });
+    document.getElementById('playlistModal').addEventListener('click',e=>{
+        if(e.target===e.currentTarget)closeNewPlaylist();
+    });
+
+    /* Mood btn in mappa */
+    document.querySelectorAll('#page-mappa .mood, #page-eventi .mood').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            const parent=btn.closest('div');
+            parent.querySelectorAll('.mood').forEach(m=>m.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+});
+</script>
+</body>
+</html>

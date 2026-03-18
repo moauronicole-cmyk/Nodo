@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nodo — Esplora il Flusso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+:root {
+  --accent: #CCFF00; --bg: #F4F4F0; --dark: #1A1A1A;
+  --txt-dim: rgba(26, 26, 26, 0.6); --border: rgba(26, 26, 26, 0.1);
+  --night-blue: #3300ff; --font-h: 'Space Grotesk', sans-serif;
+  --font-m: 'Space Mono', monospace; --ease: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+body.night-mode {
+  --bg: #0A0A0A; --dark: #F4F4F0; --accent: var(--night-blue);
+  --border: rgba(244, 244, 240, 0.1); --txt-dim: rgba(244, 244, 240, 0.6);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+
+body { 
+  background: var(--bg); color: var(--dark); font-family: var(--font-h); 
+  transition: background 0.4s var(--ease); overflow: hidden;
+}
+
+/* HEADER & FILTRI - PADDING 11rem */
+.header-fixed {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: var(--bg); border-bottom: 1px solid var(--border);
+}
+
+.navbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 11rem; gap: 2rem;
+}
+
+.logo { font-weight: 800; font-size: 1.5rem; text-transform: uppercase; letter-spacing: -1px; text-decoration: none; color: var(--dark); flex-shrink: 0; }
+
+.search-inner {
+  flex: 1; background: rgba(0,0,0,0.03); border-radius: 12px;
+  display: flex; align-items: center; padding: 0.3rem 1rem; border: 1px solid var(--border);
+}
+body.night-mode .search-inner { background: rgba(255,255,255,0.05); }
+#q { flex: 1; background: none; border: none; padding: 0.5rem; font-family: var(--font-m); color: var(--dark); outline: none; }
+
+.filter-scroll { display: flex; gap: 0.5rem; overflow-x: auto; padding: 0.8rem 11rem; scrollbar-width: none; }
+.cat-btn {
+  padding: 0.4rem 1rem; border-radius: 20px; border: 1px solid var(--border);
+  background: transparent; color: var(--dark); font-family: var(--font-m);
+  font-size: 0.65rem; white-space: nowrap; cursor: pointer; transition: 0.2s;
+}
+.cat-btn.active { background: var(--accent); border-color: var(--accent); color: #000; }
+
+/* LAYOUT SPLIT */
+.main-layout { display: flex; height: 100vh; padding-top: 140px; }
+
+.sidebar-content {
+  flex: 1.2; overflow-y: auto; padding: 0 2rem 120px 11rem; /* Padding 11rem a sinistra */
+}
+
+.map-container { flex: 1; position: relative; border-left: 1px solid var(--border); background: #1a1a1a; }
+#map { width: 100%; height: 100%; z-index: 1; }
+
+/* GRID CARDS */
+.photo-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.place-card { display: flex; flex-direction: column; animation: fadeIn 0.5s var(--ease) both; text-decoration: none; color: inherit; cursor: pointer; }
+@keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+
+.card-media { width: 100%; aspect-ratio: 4/5; border-radius: 16px; overflow: hidden; background: var(--border); position: relative; }
+.card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease); }
+.place-card:hover .card-img { transform: scale(1.05); }
+
+.card-info { padding: 12px 0; }
+.card-cat { font-family: var(--font-m); font-size: 0.65rem; color: var(--accent); text-transform: uppercase; font-weight: 700; }
+.card-name { font-weight: 700; font-size: 1.1rem; margin: 2px 0; letter-spacing: -0.3px; }
+.card-meta { font-size: 0.8rem; color: var(--txt-dim); font-family: var(--font-m); }
+
+/* MOBILE NAVIGATION */
+.view-switch { display: none; }
+.bottom-nav {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  width: calc(100% - 40px); max-width: 400px;
+  background: var(--dark); border-radius: 24px;
+  display: flex; justify-content: space-around; padding: 0.8rem; z-index: 2000;
+}
+.bottom-nav a { color: var(--bg); opacity: 0.5; text-decoration: none; font-size: 0.6rem; text-align: center; font-family: var(--font-m); }
+.bottom-nav a.active { opacity: 1; color: var(--accent); }
+.bottom-nav svg { display: block; margin: 0 auto 4px; width: 18px; height: 18px; }
+
+@media (max-width: 1024px) {
+  .navbar, .filter-scroll, .sidebar-content { padding-left: 2rem; padding-right: 2rem; }
+}
+
+@media (max-width: 768px) {
+  .main-layout { flex-direction: column; padding-top: 180px; }
+  .sidebar-content { width: 100%; flex: none; display: block; }
+  .map-container { display: none; width: 100%; flex: none; height: calc(100vh - 220px); }
+  .sidebar-content.hidden { display: none; }
+  .map-container.visible { display: block; }
+  .view-switch { display: flex; justify-content: center; gap: 10px; padding: 10px; background: var(--bg); }
+}
+</style>
+</head>
+<body>
+
+<header class="header-fixed">
+  <nav class="navbar">
+    <a href="#" class="logo">Nodo</a>
+    <div class="search-inner">
+      <input type="search" id="q" placeholder="Cerca club, aule studio, quartieri...">
+    </div>
+    <button id="btnNight" style="background:none; border:1px solid var(--border); padding: 6px 12px; border-radius: 8px; cursor:pointer; color:var(--dark); font-family:var(--font-m); font-size:0.6rem; font-weight:700;">NOTTE</button>
+  </nav>
+
+  <div class="filter-scroll" id="cats">
+    <button class="cat-btn active" data-cat="tutti">Tutti</button>
+    <button class="cat-btn" data-cat="club">Club</button>
+    <button class="cat-btn" data-cat="aule studio">Studio</button>
+    <button class="cat-btn" data-cat="centri sociali">Sociale</button>
+    <button class="cat-btn" data-cat="thrifting">Vintage</button>
+    <button class="cat-btn" data-cat="baretti">Baretti</button>
+  </div>
+
+  <div class="view-switch" id="viewSwitch">
+    <button class="cat-btn active" id="btnList" onclick="mobileView('list')">LISTA</button>
+    <button class="cat-btn" id="btnMap" onclick="mobileView('map')">MAPPA</button>
+  </div>
+</header>
+
+<main class="main-layout">
+  <section class="sidebar-content" id="sidebar">
+    <div class="photo-grid" id="grid"></div>
+  </section>
+  <section class="map-container" id="mapPanel">
+    <div id="map"></div>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <a href="#" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>ESPLORA</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>AGGIUNGI</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>PROFILO</a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../js/supabase.js"></script>
+<script>
+/* Logica importata da pulse.js */
+const NIGHT_CATEGORIES = ['club', 'centri sociali'];
+const CAT_EMOJI = { 'club': '🎵', 'aule studio': '📚', 'centri sociali': '✊', 'thrifting': '👗', 'baretti': '☕️' };
+
+let allPlaces = [], activeCat = 'tutti', searchQ = '', nightMode = false, leafletMap = null;
+const markerMap = {};
+
+document.addEventListener('DOMContentLoaded', async () => {
+  initMap();
+  await loadPlaces();
+  setupEventListeners();
+});
+
+function initMap() {
+  leafletMap = L.map('map', { zoomControl: false }).setView([45.4642, 9.1900], 13);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© CARTO'
+  }).addTo(leafletMap);
+}
+
+async function loadPlaces() {
+  try {
+    const { data, error } = await sb.from('luoghi').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    allPlaces = data || [];
+    refresh();
+  } catch (err) { console.error('Supabase Error:', err); }
+}
+
+function getFiltered() {
+  return allPlaces.filter(p => {
+    const matchCat = activeCat === 'tutti' || p.category === activeCat;
+    const q = searchQ.toLowerCase();
+    const matchSearch = !q || p.name.toLowerCase().includes(q) || p.neighborhood.toLowerCase().includes(q);
+    const isNight = NIGHT_CATEGORIES.includes(p.category) || (p.tags && p.tags.includes('Notte'));
+    const matchNight = !nightMode || isNight;
+    return matchCat && matchSearch && matchNight;
+  });
+}
+
+function refresh() {
+  const filtered = getFiltered();
+  renderGrid(filtered);
+  updateMarkers(filtered);
+}
+
+function renderGrid(places) {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  places.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'place-card';
+    card.style.animationDelay = `${i * 0.05}s`;
+    card.innerHTML = `
+      <div class="card-media">
+        ${p.image_url ? `<img src="${p.image_url}" class="card-img">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.2;">${p.name[0]}</div>`}
+      </div>
+      <div class="card-info">
+        <span class="card-cat">${p.category}</span>
+        <h3 class="card-name">${p.name}</h3>
+        <p class="card-meta">📍 ${p.neighborhood}</p>
+      </div>
+    `;
+    card.onclick = () => leafletMap.flyTo([p.lat, p.lng], 15);
+    grid.appendChild(card);
+  });
+}
+
+function updateMarkers(places) {
+  Object.values(markerMap).forEach(m => leafletMap.removeLayer(m));
+  places.forEach(p => {
+    if(!p.lat || !p.lng) return;
+    const icon = L.divIcon({
+      html: `<div style="background:var(--accent);width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #000;box-shadow:2px 2px 0 #000;">${CAT_EMOJI[p.category] || '📍'}</div>`,
+      className: '', iconSize: [30, 30]
+    });
+    markerMap[p.id] = L.marker([p.lat, p.lng], { icon }).addTo(leafletMap).bindPopup(`<b>${p.name}</b>`);
+  });
+}
+
+function mobileView(v) {
+  document.getElementById('sidebar').classList.toggle('hidden', v === 'map');
+  document.getElementById('mapPanel').classList.toggle('visible', v === 'map');
+  document.querySelectorAll('#viewSwitch .cat-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(v === 'list' ? 'btnList' : 'btnMap').classList.add('active');
+  if(v === 'map') setTimeout(() => leafletMap.invalidateSize(), 200);
+}
+
+function setupEventListeners() {
+  document.getElementById('q').addEventListener('input', e => { searchQ = e.target.value; refresh(); });
+  document.getElementById('cats').addEventListener('click', e => {
+    const btn = e.target.closest('.cat-btn');
+    if (!btn) return;
+    document.querySelectorAll('#cats .cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeCat = btn.dataset.cat;
+    refresh();
+  });
+  document.getElementById('btnNight').addEventListener('click', () => {
+    nightMode = !nightMode;
+    document.body.classList.toggle('night-mode');
+    refresh();
+  });
+}
+</script>
+</body>
+</html>

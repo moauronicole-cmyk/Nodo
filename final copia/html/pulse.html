@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Pulse — ClubX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="../css/pulse.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+</head>
+<body>
+
+    <!-- navbar iniettata da navbar.js -->
+
+    <div class="filter-bar">
+        <div class="cats" id="cats">
+            <button class="cat-btn active" data-cat="tutti">TUTTI</button>
+            <button class="cat-btn" data-cat="aule studio">📚 STUDIO</button>
+            <button class="cat-btn" data-cat="club">🎵 CLUB</button>
+            <button class="cat-btn" data-cat="centri sociali">✊ CENTRI SOCIALI</button>
+            <button class="cat-btn" data-cat="caffè letterari">📖 CAFFÈ LETTERARI</button>
+            <button class="cat-btn" data-cat="thrifting">👗 THRIFTING</button>
+            <button class="cat-btn" data-cat="parchi attrezzati">🌿 PARCHI</button>
+            <button class="cat-btn" data-cat="skatepark">SKATEPARK</button>
+            <button class="cat-btn" data-cat="baretti">BARETTI</button>
+            <button class="cat-btn" data-cat="schimico">🌿 SCHIMICO</button>
+            <button class="cat-btn" data-cat="circoli arci">CIRCOLI ARCI</button>
+            <button class="cat-btn" data-cat="spazi ibridi">SPAZI IBRIDI</button>
+
+        </div>
+        <div class="filter-right">
+            <input class="search-input" id="q" type="search" placeholder="Cerca posto, zona, tag...">
+            <button class="btn-night" id="btnNight" aria-pressed="false">
+                <span>🌙</span> NOTTE
+            </button>
+        </div>
+    </div>
+
+    <div class="view-switch" id="viewSwitch">
+        <button id="btnList" class="active" onclick="mobileView('list')">☰ LISTA</button>
+        <button id="btnMap" onclick="mobileView('map')">⊞ MAPPA</button>
+    </div>
+
+    <main class="layout">
+        <aside class="sidebar" id="sidebar"></aside>
+        <div class="map-panel" id="mapPanel">
+            <div id="map"></div>
+            <div class="map-night-badge" id="mapNightBadge">
+                🌙 MODALITÀ NOTTE — solo posti aperti dopo le 22
+            </div>
+        </div>
+    </main>
+
+    <div class="overlay" id="overlay">
+        <button class="overlay-close" id="overlayClose">×</button>
+        <div id="overlayBody"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="../js/pulse.js"></script>
+</body>
+</html>

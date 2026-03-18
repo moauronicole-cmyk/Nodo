@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nodo — Esplora il Flusso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #373737;
+  --surface: #1C1C1C;
+  --headerback: #1a1a1a;
+  --surface-hover: #242424;
+  --border: rgba(255,255,255,0.1);
+  --border-active: rgba(255,255,255,0.85);
+  --accent: #CCFF00;
+  --txt: #F4F4F0;
+  --txt-dim: rgba(244,244,240,0.5);
+  --font-h: 'Space Grotesk', sans-serif;
+  --font-m: 'Space Mono', monospace;
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+
+  --tag-1: #ccff00; /* green */
+  --tag-2: #3B82F6; /* blue */
+  --tag-3: #EC4899; /* pink */
+  --tag-4: #10B981; /* green */
+  --tag-5: #8B5CF6; /* purple */
+  --tag-6: #EF4444; /* red */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: var(--font-h);
+  min-height: 100vh;
+}
+
+/* ─── HEADER ─────────────────────────────────────── */
+.header-fixed {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: var(--headerback);
+  border-bottom: 1px solid var(--border);
+  padding: 1.2rem 2rem 0;
+}
+
+.header-top {
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;
+  max-width: 1200px; margin-left: auto; margin-right: auto;
+}
+
+.search-wrap {
+  flex: 1;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  transition: border-color 0.2s;
+  color:#000;
+}
+.search-wrap:focus-within { border-color: rgba(255,255,255,0.35); }
+
+.search-wrap svg { flex-shrink: 0; opacity: 0.4; }
+
+#q {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--txt); font-family: var(--font-m); font-size: 0.8rem;
+}
+#q::placeholder { color: var(--txt-dim); }
+
+.btn-auth {
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--txt);
+  font-family: var(--font-m);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, border-color 0.2s;
+  letter-spacing: 0.02em;
+}
+.btn-auth:hover { background: var(--surface); border-color: rgba(255,255,255,0.3); }
+
+/* ─── FILTER PILLS ───────────────────────────────── */
+.filter-scroll {
+  display: flex; gap: 0.5rem;
+  overflow-x: auto; scrollbar-width: none;
+  padding-bottom: 1rem;
+  max-width: 1200px; margin: 0 auto;
+}
+.filter-scroll::-webkit-scrollbar { display: none; }
+
+.cat-btn {
+  flex-shrink: 0;
+  padding: 0.35rem 1rem;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--txt-dim);
+  font-family: var(--font-m);
+  font-size: 0.6rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.cat-btn:hover { color: var(--txt); border-color: rgba(255,255,255,0.3); }
+.cat-btn.active { background: transparent; border-color: var(--txt); color: var(--txt); }
+
+/* ─── MAIN CONTENT ───────────────────────────────── */
+.page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem 100px;
+  padding-top: calc(120px + 1.5rem);
+}
+
+/* ─── GRID ───────────────────────────────────────── */
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+/* ─── EVENT CARD ─────────────────────────────────── */
+.event-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  border-radius: 2%;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: border-color 0.25s var(--ease), transform 0.25s var(--ease), background 0.2s;
+  animation: cardIn 0.45s var(--ease) both;
+  border-color: var(--border-active);
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.event-card:hover {
+  border-color: var(--border-active);
+  background: var(--surface-hover);
+}
+.event-card.featured { border-color: var(--border-active); }
+
+/* Image */
+.card-img-wrap {
+  width: 100%; aspect-ratio: 16/10; overflow: hidden;
+  background: #2a2a2a; position: relative;
+}
+.card-img-wrap img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.6s var(--ease);
+  display: block;
+}
+.event-card:hover .card-img-wrap img { transform: scale(1.04); }
+.card-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem; opacity: 0.15;
+}
+
+/* Body */
+.card-body {
+  padding: 1rem 1rem 0.8rem;
+  display: flex; flex-direction: column; flex: 1; gap: 0.4rem;
+}
+
+.card-location {
+  font-family: var(--font-m); font-size: 0.65rem;
+  color: var(--txt-dim); letter-spacing: 0.02em;
+}
+
+.card-title {
+  font-size: 1.15rem; font-weight: 800;
+  letter-spacing: -0.4px; line-height: 1.2;
+  color: var(--txt);
+}
+
+.card-desc {
+  font-size: 0.78rem; line-height: 1.55;
+  color: var(--txt-dim); flex: 1;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Tags */
+.card-tags {
+  display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.2rem;
+}
+.tag {
+  font-family: var(--font-m); font-size: 0.55rem; font-weight: 700;
+  padding: 0.25rem 0.6rem; border-radius: 20px;
+  letter-spacing: 0.02em; text-transform: capitalize;
+}
+.tag-filled   { color: #000; }
+.tag-outline  { background: transparent; border-width: 1px; border-style: solid; }
+
+/* Footer */
+.card-footer {
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: auto;
+}
+
+.btn-share {
+  background: none; border: none; cursor: pointer;
+  color: var(--txt-dim); padding: 4px;
+  transition: color 0.2s; border-radius: 6px;
+}
+.btn-share:hover { color: var(--txt); }
+
+.btn-disponibile {
+  font-family: var(--font-m); font-size: 0.6rem; font-weight: 700;
+  padding: 0.45rem 1.1rem; border-radius: 8px;
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--txt); cursor: pointer; letter-spacing: 0.03em;
+  text-transform: uppercase;
+  transition: background 0.2s, border-color 0.2s;
+}
+.btn-disponibile:hover { background: #2a2a2a; border-color: rgba(255,255,255,0.25); }
+
+/* ─── EMPTY STATE ────────────────────────────────── */
+.empty-state {
+  grid-column: 1/-1;
+  text-align: center; padding: 4rem 0;
+  color: var(--txt-dim); font-family: var(--font-m); font-size: 0.8rem;
+}
+
+/* ─── BOTTOM NAV (mobile) ────────────────────────── */
+.bottom-nav {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  width: calc(100% - 40px); max-width: 380px;
+  background: #1E1E1E; border: 1px solid var(--border);
+  border-radius: 24px; display: flex;
+  justify-content: space-around; padding: 0.8rem; z-index: 2000;
+}
+.bottom-nav a {
+  color: var(--txt-dim); text-decoration: none;
+  font-size: 0.55rem; text-align: center; font-family: var(--font-m); font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.bottom-nav a.active { color: var(--accent); }
+.bottom-nav svg { display: block; margin: 0 auto 4px; width: 18px; height: 18px; }
+
+/* ─── RESPONSIVE ─────────────────────────────────── */
+@media (max-width: 900px) {
+  .event-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 580px) {
+  .event-grid { grid-template-columns: 1fr; }
+  .header-fixed { padding: 1rem 1rem 0; }
+  .page-content { padding-left: 1rem; padding-right: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="header-fixed">
+  <div class="header-top">
+    <div class="search-wrap">
+      <!-- hamburger -->
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" color="var(--txt)">
+        <path d="M3 6h18M3 12h18M3 18h18"/>
+      </svg>
+      <input type="search" id="q" placeholder="Cerca eventi, luoghi, quartieri...">
+      <!-- search icon -->
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>
+      </svg>
+    </div>
+    <button class="btn-auth">Iscriviti / Accedi</button>
+  </div>
+
+  <div class="filter-scroll" id="cats">
+    <button class="cat-btn active" data-cat="tutti">Tutti</button>
+    <button class="cat-btn" data-cat="club">Club</button>
+    <button class="cat-btn" data-cat="aule studio">Studio</button>
+    <button class="cat-btn" data-cat="centri sociali">Sociale</button>
+    <button class="cat-btn" data-cat="thrifting">Vintage</button>
+    <button class="cat-btn" data-cat="baretti">Baretti</button>
+  </div>
+</header>
+
+<main class="page-content">
+  <div class="event-grid" id="grid"></div>
+</main>
+
+<nav class="bottom-nav">
+  <a href="#" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>
+    </svg>ESPLORA
+  </a>
+  <a href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 5v14M5 12h14"/>
+    </svg>AGGIUNGI
+  </a>
+  <a href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+    </svg>PROFILO
+  </a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script>
+/* ── Constants ─────────────────────────────────────────── */
+const NIGHT_CATEGORIES = ['club', 'centri sociali'];
+
+/* Tag color palette – cycles through these */
+const TAG_COLORS = [
+  { bg: '#ccff00', text: '#000' },  // orange
+  { bg: 'transparent', border: 'rgba(255,255,255,0.35)', text: 'rgba(244,244,240,0.75)' }, // ghost
+  { bg: '#3B82F6', text: '#fff' },  // blue
+  { bg: '#EC4899', text: '#fff' },  // pink
+  { bg: '#10B981', text: '#fff' },  // green
+  { bg: '#8B5CF6', text: '#fff' },  // purple
+];
+
+function tagStyle(index) {
+  const c = TAG_COLORS[index % TAG_COLORS.length];
+  if (c.border) {
+    return `background:transparent; border:1px solid ${c.border}; color:${c.text};`;
+  }
+  return `background:${c.bg}; color:${c.text};`;
+}
+
+/* ── State ─────────────────────────────────────────────── */
+let allPlaces = [], activeCat = 'tutti', searchQ = '';
+
+/* ── Init ──────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadPlaces();
+  setupEventListeners();
+});
+
+/* ── Data ──────────────────────────────────────────────── */
+async function loadPlaces() {
+  try {
+    const { data, error } = await sb.from('luoghi').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    allPlaces = data || [];
+    refresh();
+  } catch (err) {
+    console.error('Supabase Error:', err);
+    // Fallback demo data so the layout is visible without DB
+    allPlaces = getDemoData();
+    refresh();
+  }
+}
+
+function getDemoData() {
+  return [
+    { id:1, name:'Roma Diffusa', neighborhood:'San Lorenzo, Roma', category:'club', description:'Anche quest\'anno torna a San Lorenzo il progetto diffuso e itinerante che apre i luoghi storici della città a contenuti contemporanei', tags:['Stand-up Comedy','Dj set','Workshop','Mostra'], image_url:'', featured:true },
+    { id:2, name:'Hachiko Rave', neighborhood:'Pigneto, Roma', category:'club', description:'Una notte intensa di musica elettronica nei cortili del quartiere con artisti internazionali e local heroes.', tags:['Dj set','Techno'], image_url:'' },
+    { id:3, name:'Roma Diffusa', neighborhood:'San Lorenzo, Roma', category:'club', description:'Anche quest\'anno torna a San Lorenzo il progetto diffuso e itinerante che apre i luoghi storici della città a contenuti contemporanei', tags:['Stand-up Comedy','Dj set','Workshop','Mostra'], image_url:'' },
+    { id:4, name:'Roma Diffusa', neighborhood:'San Lorenzo, Roma', category:'club', description:'Anche quest\'anno torna a San Lorenzo il progetto diffuso e itinerante che apre i luoghi storici della città a contenuti contemporanei', tags:['Stand-up Comedy','Dj set','Workshop','Mostra'], image_url:'' },
+    { id:5, name:'Roma Diffusa', neighborhood:'San Lorenzo, Roma', category:'centri sociali', description:'Anche quest\'anno torna a San Lorenzo il progetto diffuso e itinerante che apre i luoghi storici della città a contenuti contemporanei', tags:['Stand-up Comedy','Dj set','Workshop','Mostra'], image_url:'' },
+    { id:6, name:'Roma Diffusa', neighborhood:'San Lorenzo, Roma', category:'baretti', description:'Anche quest\'anno torna a San Lorenzo il progetto diffuso e itinerante che apre i luoghi storici della città a contenuti contemporanei', tags:['Stand-up Comedy','Dj set','Workshop','Mostra'], image_url:'' },
+  ];
+}
+
+/* ── Filter ────────────────────────────────────────────── */
+function getFiltered() {
+  return allPlaces.filter(p => {
+    const matchCat = activeCat === 'tutti' || p.category === activeCat;
+    const q = searchQ.toLowerCase();
+    const matchSearch = !q ||
+      (p.name && p.name.toLowerCase().includes(q)) ||
+      (p.neighborhood && p.neighborhood.toLowerCase().includes(q));
+    return matchCat && matchSearch;
+  });
+}
+
+/* ── Render ────────────────────────────────────────────── */
+function refresh() {
+  renderGrid(getFiltered());
+}
+
+function renderGrid(places) {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  if (!places.length) {
+    grid.innerHTML = '<div class="empty-state">Nessun risultato trovato.</div>';
+    return;
+  }
+
+  places.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'event-card' + (p.featured ? ' featured' : '');
+    card.style.animationDelay = `${i * 0.06}s`;
+
+    const tagsHtml = (p.tags || []).map((tag, ti) =>
+      `<span class="tag" style="${tagStyle(ti)}">${tag}</span>`
+    ).join('');
+
+    const imgHtml = p.image_url
+      ? `<img src="${p.image_url}" alt="${p.name}" loading="lazy">`
+      : `<div class="card-placeholder">${(p.name || '?')[0]}</div>`;
+
+    card.innerHTML = `
+      <div class="card-img-wrap">${imgHtml}</div>
+      <div class="card-body">
+        <span class="card-location">📍 ${p.neighborhood || ''}</span>
+        <h3 class="card-title">${p.name || ''}</h3>
+        ${p.description ? `<p class="card-desc">${p.description}</p>` : ''}
+        ${tagsHtml ? `<div class="card-tags">${tagsHtml}</div>` : ''}
+      </div>
+      <div class="card-footer">
+        <button class="btn-share" title="Condividi">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+            <path d="M8.59 13.51l6.83 3.98M15.41 6.51L8.59 10.49"/>
+          </svg>
+        </button>
+        <button class="btn-disponibile">Disponibile</button>
+      </div>
+    `;
+
+    /* click on card navigates / could open detail */
+    card.addEventListener('click', e => {
+      if (e.target.closest('.btn-share') || e.target.closest('.btn-disponibile')) return;
+      console.log('Open place:', p.id, p.name);
+    });
+
+    /* share button */
+    card.querySelector('.btn-share').addEventListener('click', () => {
+      if (navigator.share) {
+        navigator.share({ title: p.name, text: p.description, url: window.location.href });
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+      }
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+/* ── Event Listeners ───────────────────────────────────── */
+function setupEventListeners() {
+  document.getElementById('q').addEventListener('input', e => {
+    searchQ = e.target.value;
+    refresh();
+  });
+
+  document.getElementById('cats').addEventListener('click', e => {
+    const btn = e.target.closest('.cat-btn');
+    if (!btn) return;
+    document.querySelectorAll('#cats .cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeCat = btn.dataset.cat;
+    refresh();
+  });
+}
+</script>
+</body>
+</html>

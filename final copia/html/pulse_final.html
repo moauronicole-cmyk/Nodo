@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Pulse — Esplora</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+/* =========================================
+   ROOT — identico a pulse.css
+   ========================================= */
+:root {
+  --bg:        #1A1A1A;
+  --card-bg:   #212121;
+  --txt:       #F4F4F0;
+  --txt-dim:   rgba(244,244,240,0.5);
+  --txt-faint: rgba(244,244,240,0.2);
+  --accent:    #CCFF00;
+  --border:    #F4F4F0;
+  --border-s:  rgba(244,244,240,0.12);
+  --night:     #3300ff;
+  --shadow:    4px 4px 0px var(--border);
+  --shadow-hv: 6px 6px 0px var(--border);
+  --font-h:    'Space Grotesk', sans-serif;
+  --font-m:    'Space Mono', monospace;
+  --ease-b:    cubic-bezier(0.34,1.56,0.64,1);
+  --ease-o:    cubic-bezier(0.16,1,0.3,1);
+}
+
+body.night-mode {
+  --bg:      #0D0D0D;
+  --card-bg: #141414;
+  --accent:  var(--night);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: var(--font-m);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* layout sidebar+mappa gestisce scroll interno */
+  transition: background 0.3s;
+}
+
+/* =========================================
+   HEADER FISSO
+   ========================================= */
+.header-fixed {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+  flex-shrink: 0;
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 11rem;
+  gap: 2rem;
+}
+
+.logo {
+  font-family: var(--font-h);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: letter-spacing 0.2s var(--ease-b);
+}
+.logo:hover { letter-spacing: -1px; }
+
+/* search */
+.search-inner {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--border);
+  background: var(--card-bg);
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+.search-inner:focus-within {
+  transform: translate(-1px,-1px);
+  box-shadow: var(--shadow-hv);
+}
+.search-inner svg { flex-shrink:0; margin:0 0.7rem; opacity:0.35; }
+#q {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 0.55rem 0;
+  font-family: var(--font-m);
+  font-size: 0.78rem;
+  color: var(--txt);
+  outline: none;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+#q::placeholder { opacity:0.3; }
+.search-count {
+  font-size: 0.6rem;
+  color: var(--txt-dim);
+  padding: 0 0.8rem;
+  border-left: 1px solid var(--border-s);
+  white-space: nowrap;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+}
+
+/* btn notte */
+.btn-night {
+  font-family: var(--font-m);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--border);
+  background: transparent;
+  color: var(--txt);
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--border);
+  white-space: nowrap;
+  transition: transform 0.12s var(--ease-b), box-shadow 0.12s, background 0.12s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  letter-spacing: 0.04em;
+}
+.btn-night:hover { transform:translate(-1px,-1px); box-shadow:5px 5px 0 var(--border); }
+body.night-mode .btn-night { background:var(--night); color:#fff; border-color:var(--night); box-shadow:2px 2px 0 rgba(255,255,255,0.15); transform:translate(1px,1px); }
+
+/* FILTRI */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  padding: 0.55rem 11rem;
+  border-top: 1px solid var(--border-s);
+  gap: 0.4rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar { display:none; }
+
+.cat-btn {
+  font-family: var(--font-m);
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.28rem 0.75rem;
+  border: 2px solid var(--border);
+  background: transparent;
+  color: var(--txt);
+  cursor: pointer;
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+  box-shadow: 2px 2px 0 var(--border);
+  transition: transform 0.1s var(--ease-b), box-shadow 0.1s, background 0.1s, color 0.1s;
+}
+.cat-btn:hover { transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--border); }
+.cat-btn.active {
+  background: var(--accent);
+  color: #111;
+  border-color: var(--accent);
+  box-shadow: 1px 1px 0 #111;
+  transform: translate(1px,1px);
+}
+body.night-mode .cat-btn.active { background:var(--night); border-color:var(--night); color:#fff; box-shadow:1px 1px 0 rgba(255,255,255,0.2); }
+
+/* MOBILE VIEW SWITCH */
+.view-switch {
+  display: none;
+  border-top: 1px solid var(--border-s);
+}
+.view-switch button {
+  flex:1;
+  font-family: var(--font-m);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.55rem;
+  border: none;
+  border-right: 2px solid var(--border);
+  background: var(--bg);
+  color: var(--txt);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.15s, color 0.15s;
+}
+.view-switch button:last-child { border-right: none; }
+.view-switch button.active { background:var(--txt); color:var(--bg); }
+
+/* =========================================
+   MAIN LAYOUT — sidebar + mappa
+   ========================================= */
+.main-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* SIDEBAR */
+.sidebar-content {
+  width: 520px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  border-right: 2px solid var(--border);
+  padding: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.sidebar-content::-webkit-scrollbar { width:3px; }
+.sidebar-content::-webkit-scrollbar-thumb { background:var(--border); }
+
+/* MAPPA */
+.map-container {
+  flex: 1;
+  position: relative;
+}
+#map { width:100%; height:100%; }
+
+/* badge notte sulla mappa */
+.map-night-badge {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--night);
+  color: #fff;
+  font-family: var(--font-m);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.5rem 1.2rem;
+  border: 2px solid rgba(255,255,255,0.3);
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.4);
+  white-space: nowrap;
+  z-index: 500;
+  transition: transform 0.4s var(--ease-b);
+  pointer-events: none;
+  letter-spacing: 0.04em;
+}
+.map-night-badge.visible { transform: translateX(-50%) translateY(0); }
+
+/* =========================================
+   PHOTO GRID — Vinted info-sotto
+   ========================================= */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--border-s);
+}
+
+/* CARD */
+.place-card {
+  background: var(--card-bg);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  animation: cardIn 0.35s var(--ease-o) both;
+  transition: opacity 0.15s;
+}
+@keyframes cardIn { from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);} }
+.place-card:hover { opacity: 0.78; }
+
+/* foto quadrata */
+.card-photo {
+  position: relative;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  background: #111;
+  flex-shrink: 0;
+}
+.card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.card-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-placeholder span {
+  font-family: var(--font-h);
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -3px;
+  opacity: 0.07;
+  color: var(--txt);
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* cuore */
+.card-heart {
+  position: absolute;
+  top: 7px; right: 7px;
+  width: 26px; height: 26px;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 2;
+  transition: background 0.12s, transform 0.12s var(--ease-b);
+}
+.card-heart:hover { transform:scale(1.12); background:rgba(0,0,0,0.85); }
+.card-heart.saved { background:rgba(204,255,0,0.15); border-color:var(--accent); }
+body.night-mode .card-heart.saved { background:rgba(51,0,255,0.2); border-color:var(--night); }
+
+/* night pill */
+.card-night {
+  position: absolute;
+  top: 7px; left: 7px;
+  font-family: var(--font-m);
+  font-size: 0.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--night);
+  color: #fff;
+  padding: 2px 5px;
+  z-index: 2;
+}
+
+/* info SOTTO — brutalist */
+.card-info {
+  padding: 7px 9px 10px;
+  border-top: 1px solid var(--border-s);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--card-bg);
+}
+.card-cat-label {
+  font-family: var(--font-m);
+  font-size: 0.52rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--accent);
+}
+body.night-mode .card-cat-label { color: var(--night); }
+.card-name {
+  font-family: var(--font-h);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.3px;
+  color: var(--txt);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-nbhd {
+  font-family: var(--font-m);
+  font-size: 0.54rem;
+  color: var(--txt-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* BG PLACEHOLDER per categoria */
+.bg-club{background:#110818;} .bg-aule-studio{background:#081208;}
+.bg-centri-sociali{background:#120808;} .bg-caffe-letterari{background:#080812;}
+.bg-thrifting{background:#140F06;} .bg-parchi-attrezzati{background:#080E08;}
+.bg-baretti{background:#0F0C06;} .bg-circoli-arci{background:#100606;}
+.bg-skatepark{background:#080C10;} .bg-schimico{background:#0A100A;}
+.bg-spazi-ibridi{background:#0C0C10;} .bg-default{background:#111;}
+
+.empty-msg {
+  grid-column: 1/-1;
+  font-family: var(--font-m);
+  font-size: 0.75rem;
+  opacity: 0.3;
+  text-align: center;
+  padding: 3rem 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* =========================================
+   BOTTOM NAV — pill stile originale
+   ========================================= */
+.bottom-nav {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: 360px;
+  background: var(--txt);
+  border: 2px solid var(--border);
+  box-shadow: 4px 4px 0 var(--border);
+  border-radius: 0; /* brutalist = no radius */
+  display: flex;
+  justify-content: space-around;
+  padding: 0.7rem 1rem;
+  z-index: 2000;
+}
+.bottom-nav a {
+  color: var(--bg);
+  opacity: 0.4;
+  text-decoration: none;
+  font-size: 0.52rem;
+  text-align: center;
+  font-family: var(--font-m);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transition: opacity 0.15s;
+}
+.bottom-nav a.active { opacity: 1; color: #111; }
+.bottom-nav a svg { display:block; width:16px; height:16px; }
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 1100px) {
+  .navbar, .filter-bar { padding-left:2rem; padding-right:2rem; }
+  .sidebar-content { width: 380px; }
+}
+
+@media (max-width: 768px) {
+  html, body { height:auto; overflow:auto; }
+  .main-layout { flex-direction:column; height:auto; overflow:visible; }
+  .sidebar-content { width:100%; border-right:none; border-bottom:2px solid var(--border); overflow:visible; }
+  .map-container { height: 55vh; flex:none; }
+  .navbar { padding:0.8rem 1rem; gap:0.8rem; }
+  .filter-bar { padding:0.5rem 0.8rem; }
+  .view-switch { display:flex; }
+  .sidebar-content.hidden { display:none; }
+  .map-container.hidden { display:none; }
+  .photo-grid { grid-template-columns: repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<header class="header-fixed" id="headerFixed">
+  <nav class="navbar">
+    <a href="#" class="logo">The Pulse</a>
+    <div class="search-inner">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+      <input type="search" id="q" placeholder="Cerca posto, zona, tag...">
+      <span class="search-count" id="searchCount">—</span>
+    </div>
+    <button class="btn-night" id="btnNight">🌙 Notte</button>
+  </nav>
+
+  <div class="filter-bar" id="cats">
+    <button class="cat-btn active" data-cat="tutti">Tutti</button>
+    <button class="cat-btn" data-cat="aule studio">Studio</button>
+    <button class="cat-btn" data-cat="club">Club</button>
+    <button class="cat-btn" data-cat="centri sociali">Centri sociali</button>
+    <button class="cat-btn" data-cat="caffè letterari">Caffè letterari</button>
+    <button class="cat-btn" data-cat="thrifting">Thrifting</button>
+    <button class="cat-btn" data-cat="parchi attrezzati">Parchi</button>
+    <button class="cat-btn" data-cat="skatepark">Skatepark</button>
+    <button class="cat-btn" data-cat="baretti">Baretti</button>
+    <button class="cat-btn" data-cat="schimico">Schimico</button>
+    <button class="cat-btn" data-cat="circoli arci">Circoli Arci</button>
+    <button class="cat-btn" data-cat="spazi ibridi">Spazi ibridi</button>
+  </div>
+
+  <div class="view-switch" id="viewSwitch">
+    <button id="btnList" class="active" onclick="mobileView('list')">☰ Lista</button>
+    <button id="btnMap" onclick="mobileView('map')">⊞ Mappa</button>
+  </div>
+</header>
+
+<main class="main-layout" id="mainLayout">
+  <section class="sidebar-content" id="sidebar">
+    <div class="photo-grid" id="grid"></div>
+  </section>
+
+  <section class="map-container" id="mapPanel">
+    <div id="map"></div>
+    <div class="map-night-badge" id="mapNightBadge">
+      🌙 Modalità notte — solo posti aperti dopo le 22
+    </div>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <a href="#" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+    Esplora
+  </a>
+  <a href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Aggiungi
+  </a>
+  <a href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Profilo
+  </a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../js/supabase.js"></script>
+<script>
+/* =============================================
+   COSTANTI
+   ============================================= */
+const NIGHT_CATEGORIES = ['club', 'centri sociali'];
+const NIGHT_TAGS = ['24/7', 'Notte', 'Serata'];
+const CAT_EMOJI = {
+  'cinema':'📽️','caffè letterari':'📖','aule studio':'📚',
+  'centri sociali':'✊','club':'🎵','thrifting':'👗',
+  'parchi attrezzati':'🌿','skatepark':'🛹','baretti':'☕️','schimico':'🥌'
+};
+const BG_MAP = {
+  'club':'bg-club','aule studio':'bg-aule-studio','centri sociali':'bg-centri-sociali',
+  'caffè letterari':'bg-caffe-letterari','thrifting':'bg-thrifting',
+  'parchi attrezzati':'bg-parchi-attrezzati','baretti':'bg-baretti',
+  'circoli arci':'bg-circoli-arci','skatepark':'bg-skatepark',
+  'schimico':'bg-schimico','spazi ibridi':'bg-spazi-ibridi'
+};
+
+let allPlaces = [], activeCat = 'tutti', searchQ = '', nightMode = false;
+let selectedId = null, leafletMap = null, mapReady = false;
+const markerMap = {};
+
+/* =============================================
+   INIT
+   ============================================= */
+document.addEventListener('DOMContentLoaded', async () => {
+  setHeaderPadding();
+  initMap();
+  await loadPlaces();
+  setupFilters();
+  setupSearch();
+  setupNightMode();
+});
+
+function setHeaderPadding() {
+  const h = document.getElementById('headerFixed');
+  const main = document.getElementById('mainLayout');
+  const update = () => { main.style.paddingTop = h.offsetHeight + 'px'; };
+  update();
+  new ResizeObserver(update).observe(h);
+}
+
+/* =============================================
+   SUPABASE
+   ============================================= */
+async function loadPlaces() {
+  try {
+    const { data, error } = await sb.from('luoghi').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    allPlaces = data || [];
+  } catch (err) {
+    console.warn('Supabase error, uso fallback:', err.message);
+    allPlaces = typeof FALLBACK_PLACES !== 'undefined' ? FALLBACK_PLACES : [];
+  }
+  render();
+}
+
+/* =============================================
+   FILTRO
+   ============================================= */
+function getFiltered() {
+  return allPlaces.filter(p => {
+    const catOk = activeCat === 'tutti' || p.category === activeCat;
+    const q = searchQ.toLowerCase();
+    const searchOk = !q
+      || p.name.toLowerCase().includes(q)
+      || (p.neighborhood||'').toLowerCase().includes(q)
+      || (p.tags||[]).some(t => t.toLowerCase().includes(q));
+    const nightOk = !nightMode || isNightPlace(p);
+    return catOk && searchOk && nightOk;
+  });
+}
+
+function isNightPlace(p) {
+  return NIGHT_CATEGORIES.includes(p.category)
+    || (p.tags||[]).some(t => NIGHT_TAGS.includes(t));
+}
+
+function render() {
+  const filtered = getFiltered();
+  renderGrid(filtered);
+  updateMapMarkers(filtered);
+}
+
+/* =============================================
+   GRID
+   ============================================= */
+function renderGrid(places) {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  document.getElementById('searchCount').textContent = places.length + ' posti';
+
+  if (!places.length) {
+    grid.innerHTML = '<p class="empty-msg">Nessun posto trovato.</p>';
+    return;
+  }
+
+  const saved = JSON.parse(localStorage.getItem('nodo_saved') || '[]');
+
+  places.forEach((p, i) => {
+    const isSaved = saved.some(s => s.id === p.id);
+    const isNight = isNightPlace(p);
+    const bgClass = BG_MAP[p.category] || 'bg-default';
+
+    const photoHTML = p.image_url
+      ? `<img class="card-img" src="${p.image_url}" alt="${p.name}" loading="lazy">`
+      : `<div class="card-placeholder ${bgClass}"><span>${abbr(p.name)}</span></div>`;
+
+    const nightHTML = isNight ? `<div class="card-night">🌙 Notte</div>` : '';
+
+    const card = document.createElement('div');
+    card.className = 'place-card';
+    card.id = 'card-' + p.id;
+    card.style.animationDelay = (i * 0.03) + 's';
+    card.innerHTML = `
+      <div class="card-photo">
+        ${photoHTML}
+        ${nightHTML}
+        <button class="card-heart${isSaved?' saved':''}" id="hrt-${p.id}"
+          onclick="event.stopPropagation();toggleSave(${p.id})">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path id="hrtp-${p.id}"
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+              stroke="${isSaved?'#CCFF00':'rgba(255,255,255,0.7)'}"
+              fill="${isSaved?'rgba(204,255,0,0.3)':'none'}"
+              stroke-width="1.8"/>
+          </svg>
+        </button>
+      </div>
+      <div class="card-info">
+        <span class="card-cat-label">${p.category||''}</span>
+        <div class="card-name">${p.name}</div>
+        <div class="card-nbhd">📍 ${p.neighborhood||''}</div>
+      </div>`;
+
+    card.addEventListener('click', () => openDetail(p));
+    grid.appendChild(card);
+  });
+}
+
+function abbr(n) { return (n||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+
+/* =============================================
+   MAPPA — stessa logica di pulse.js
+   ============================================= */
+function initMap() {
+  if (typeof L === 'undefined') return;
+  leafletMap = L.map('map', { zoomControl: true }).setView([45.4642, 9.1900], 13);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap © CARTO', maxZoom: 19
+  }).addTo(leafletMap);
+  mapReady = true;
+}
+
+function categoryIcon(category, active) {
+  const emoji = CAT_EMOJI[category] || '📍';
+  const bg = active ? '#CCFF00' : '#1A1A1A';
+  const border = active ? '#CCFF00' : '#F4F4F0';
+  return L.divIcon({
+    className: '',
+    html: `<div style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:${bg};border:2px solid ${border};box-shadow:3px 3px 0 #111;font-size:16px;transform:${active?'scale(1.25)':'scale(1)'};transition:transform 0.15s;">${emoji}</div>`,
+    iconSize: [34,34], iconAnchor: [17,17], popupAnchor: [0,-22]
+  });
+}
+
+function updateMapMarkers(places) {
+  if (!mapReady) return;
+  Object.values(markerMap).forEach(m => leafletMap.removeLayer(m));
+  for (const k in markerMap) delete markerMap[k];
+  places.forEach(p => {
+    if (!p.lat || !p.lng) return;
+    const m = L.marker([p.lat, p.lng], { icon: categoryIcon(p.category, p.id === selectedId) }).addTo(leafletMap);
+    m.bindPopup(`<strong style="font-family:monospace;font-size:0.8rem;text-transform:uppercase">${p.name}</strong><br><small>${p.neighborhood}</small>`);
+    m.on('click', () => openDetail(p));
+    markerMap[p.id] = m;
+  });
+}
+
+/* =============================================
+   DETTAGLIO — naviga alla pagina
+   ============================================= */
+function openDetail(place) {
+  window.location.href = `place_detail.html?id=${place.id}`;
+}
+
+/* =============================================
+   SAVE
+   ============================================= */
+function toggleSave(id) {
+  const saved = JSON.parse(localStorage.getItem('nodo_saved') || '[]');
+  const exists = saved.some(s => s.id === id);
+  const newSaved = exists ? saved.filter(s=>s.id!==id) : [...saved, allPlaces.find(p=>p.id===id)];
+  localStorage.setItem('nodo_saved', JSON.stringify(newSaved));
+  const btn = document.getElementById('hrt-' + id);
+  const path = document.getElementById('hrtp-' + id);
+  if (btn) btn.classList.toggle('saved', !exists);
+  if (path) {
+    path.setAttribute('stroke', !exists ? '#CCFF00' : 'rgba(255,255,255,0.7)');
+    path.setAttribute('fill', !exists ? 'rgba(204,255,0,0.3)' : 'none');
+  }
+}
+
+/* =============================================
+   SETUP EVENTI
+   ============================================= */
+function setupFilters() {
+  document.getElementById('cats').addEventListener('click', e => {
+    const btn = e.target.closest('.cat-btn');
+    if (!btn || !btn.dataset.cat) return;
+    document.querySelectorAll('#cats .cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeCat = btn.dataset.cat;
+    render();
+  });
+}
+
+function setupSearch() {
+  document.getElementById('q').addEventListener('input', e => { searchQ = e.target.value; render(); });
+}
+
+function setupNightMode() {
+  const btn = document.getElementById('btnNight');
+  const badge = document.getElementById('mapNightBadge');
+  btn.addEventListener('click', () => {
+    nightMode = !nightMode;
+    document.body.classList.toggle('night-mode', nightMode);
+    if (badge) badge.classList.toggle('visible', nightMode);
+    if (nightMode) {
+      activeCat = 'tutti';
+      document.querySelectorAll('#cats .cat-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('[data-cat="tutti"]').classList.add('active');
+    }
+    render();
+  });
+}
+
+function mobileView(v) {
+  const sidebar = document.getElementById('sidebar');
+  const mapPanel = document.getElementById('mapPanel');
+  const btnList = document.getElementById('btnList');
+  const btnMap = document.getElementById('btnMap');
+  if (v === 'list') {
+    sidebar.classList.remove('hidden');
+    mapPanel.classList.add('hidden');
+    btnList.classList.add('active');
+    btnMap.classList.remove('active');
+  } else {
+    sidebar.classList.add('hidden');
+    mapPanel.classList.remove('hidden');
+    btnMap.classList.add('active');
+    btnList.classList.remove('active');
+    if (mapReady) setTimeout(() => leafletMap.invalidateSize(), 150);
+  }
+}
+</script>
+</body>
+</html>

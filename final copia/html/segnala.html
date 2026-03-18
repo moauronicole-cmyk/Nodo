@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aiutaci - ClubX</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+</head>
+<body>
+    <!-- navbar iniettata da navbar.js -->
+
+    <main class="form-section">
+        <div class="form-header">
+            <h1 class="hero-title">AIUTACI</h1>
+            <p class="hero-description">Manda le coordinate. Se il posto è valido lo mettiamo sulla mappa.</p>
+        </div>
+        <!-- registrati cosi ti arrivano le proposte per mail-->
+        <form action="https://formspree.io/f/tuo-codice-qui" method="POST" class="brutal-form">
+            
+            <div class="form-group">
+                <label for="nome-posto">/// NOME DEL POSTO O EVENTO *</label>
+                <input type="text" id="nome-posto" name="nome" placeholder="Es. Ex-Snia, Baretto di Via del Pigneto..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="categoria">/// COS'È? *</label>
+                <select id="categoria" name="categoria" required>
+                    <option value="" disabled selected>Scegli una categoria...</option>
+                    <option value="aula-studio">Aula Studio / Co-working</option>
+                    <option value="clubbing">Clubbing / Serata</option>
+                    <option value="centro-sociale">Centro Sociale</option>
+                    <option value="mostra">Mostra / Arte</option>
+                    <option value="altro">Altro (roba inclassificabile)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="zona">/// ZONA / INDIRIZZO</label>
+                <input type="text" id="zona" name="zona" placeholder="Es. San Lorenzo, Via Tiburtina...">
+            </div>
+
+            <div class="form-group">
+                <label for="motivo">/// PERCHÉ SPACCA? *</label>
+                <textarea id="motivo" name="motivo" rows="4" placeholder="Dicci perché dovremmo andarci. Prezzi bassi? Musica assurda? Caffè a 50 centesimi?" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="link-info">/// LINK (Sito, Google Maps, Evento IG)</label>
+                <input type="url" id="link-info" name="link" placeholder="https://...">
+            </div>
+
+            <div class="form-group">
+                <label for="poster">/// CARICA LA LOCANDINA / FOTO (Opzionale)</label>
+                <input type="file" id="poster" name="poster" accept="image/png, image/jpeg, image/webp" class="file-input">
+            </div>
+
+            <div class="form-group">
+                <label for="contatto">/// IL TUO INSTAGRAM (Opzionale)</label>
+                <input type="text" id="contatto" name="contatto" placeholder="@tuonome (se vuoi il credit)">
+            </div>
+
+            <button type="submit" class="btn-submit">INVIA LA SEGNALAZIONE &rarr;</button>
+        </form>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-logo">CLUBX</div>
+            <div class="footer-links">
+                <a href="#">Instagram</a>
+                <a href="#">TikTok</a>
+                <a href="segnala.html">Fai la Spia (Contatti)</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>/// MADE IN ROME BY ITS LAZIO DIGITAL STUDENTS &copy; 2026</p>
+        </div>
+    </footer>
+
+    <script src="../js/navbar.js"></script>
+    <script src="../js/index.js"></script>
+</body>
+</html>

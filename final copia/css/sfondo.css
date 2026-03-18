@@ -1,0 +1,7 @@
+.sfondo-intero {
+            background-image: url('../icons/ponte.png');
+            height: 100vh; /* vh sta per Viewport Height, 100% dell'altezza dello schermo */
+            background-position: center; /* Centra l'immagine */
+            background-repeat: no-repeat; /* Evita che l'immagine si ripeta */
+            background-size: cover; /* Scala l'immagine per coprire tutto lo spazio senza deformarla */
+        }

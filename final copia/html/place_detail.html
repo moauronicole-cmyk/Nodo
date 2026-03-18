@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Pulse — Dettaglio posto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d0d0d; --bg2:#181818; --bg3:#202020;
+  --txt:#F4F4F0; --txt2:rgba(244,244,240,0.45); --txt3:rgba(244,244,240,0.18);
+  --accent:#CCFF00; --border:#F4F4F0; --border-s:rgba(244,244,240,0.12);
+  --night:#3300ff;
+  --font-h:'Space Grotesk',sans-serif; --font-m:'Space Mono',monospace;
+  --ease-b:cubic-bezier(0.34,1.56,0.64,1); --ease-o:cubic-bezier(0.16,1,0.3,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--txt);font-family:var(--font-m);min-height:100vh;display:flex;flex-direction:column;}
+
+/* NAVBAR */
+.navbar{display:flex;justify-content:space-between;align-items:center;padding:1rem 11rem;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0;position:sticky;top:0;z-index:100;}
+.logo{font-family:var(--font-h);font-size:1.6rem;font-weight:700;letter-spacing:-2px;text-transform:uppercase;color:var(--accent);text-decoration:none;}
+.back-btn{display:flex;align-items:center;gap:0.5rem;font-family:var(--font-m);font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--txt2);text-decoration:none;letter-spacing:0.04em;cursor:pointer;background:none;border:none;transition:color 0.15s;}
+.back-btn:hover{color:var(--txt);}
+.back-btn svg{width:14px;height:14px;}
+.nav-right{display:flex;gap:0.6rem;align-items:center;}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}
+.hamburger span{display:block;width:22px;height:2px;background:var(--txt);transition:all 0.3s;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* LAYOUT */
+.page{max-width:1200px;margin:0 auto;padding:0 11rem;width:100%;}
+@media(max-width:1100px){.page{padding:0 2rem;}}
+@media(max-width:860px){.page{padding:0 1rem;}}
+
+/* HERO FOTO */
+.hero{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;background:var(--bg2);margin-bottom:0;}
+.hero img{width:100%;height:100%;object-fit:cover;display:block;}
+.hero-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.hero-placeholder span{font-family:var(--font-h);font-size:8rem;font-weight:700;letter-spacing:-6px;opacity:0.06;color:var(--txt);text-transform:uppercase;user-select:none;}
+.hero-cat{position:absolute;top:1.2rem;left:1.2rem;font-family:var(--font-m);font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;background:var(--accent);color:#111;padding:3px 8px;border:1.5px solid #111;}
+.hero-night{position:absolute;top:1.2rem;left:1.2rem;margin-top:26px;font-family:var(--font-m);font-size:0.58rem;font-weight:700;background:var(--night);color:#fff;padding:2px 7px;text-transform:uppercase;letter-spacing:0.05em;}
+
+/* CONTENT AREA */
+.detail-wrap{display:grid;grid-template-columns:1fr 340px;gap:3rem;padding:2.5rem 0 3rem;align-items:start;}
+@media(max-width:860px){.detail-wrap{grid-template-columns:1fr;gap:2rem;padding:1.5rem 0 2rem;}}
+
+/* LEFT — info principale */
+.detail-main{}
+
+.place-nbhd{font-family:var(--font-m);font-size:0.65rem;color:var(--txt2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.4rem;}
+.place-name{font-family:var(--font-h);font-size:2.4rem;font-weight:700;letter-spacing:-2.5px;text-transform:uppercase;line-height:1;margin-bottom:1rem;}
+@media(max-width:480px){.place-name{font-size:1.8rem;}}
+
+.tag-row{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.5rem;}
+.tag-chip{background:transparent;border:1px solid var(--border-s);padding:0.15rem 0.6rem;font-family:var(--font-m);font-size:0.62rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:0.04em;}
+.tag-chip.accent{background:var(--accent);color:#111;border-color:var(--accent);}
+.tag-chip.night{background:var(--night);color:#fff;border-color:var(--night);}
+
+.section-label{font-family:var(--font-m);font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--txt3);margin-bottom:0.8rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border-s);}
+
+.place-desc{font-size:0.88rem;line-height:1.75;color:var(--txt2);margin-bottom:2.5rem;max-width:580px;}
+
+/* stats bar */
+.stats-bar{display:flex;gap:0;margin-bottom:2.5rem;border:1px solid var(--border-s);}
+.stat{flex:1;padding:0.9rem 1rem;text-align:center;border-right:1px solid var(--border-s);}
+.stat:last-child{border-right:none;}
+.stat-val{font-family:var(--font-h);font-size:1.1rem;font-weight:700;color:var(--txt);letter-spacing:-0.5px;}
+.stat-lbl{font-family:var(--font-m);font-size:0.52rem;color:var(--txt3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;}
+
+/* EVENTI OSPITATI */
+.events-section{margin-bottom:2.5rem;}
+.event-card{display:flex;gap:1rem;align-items:center;padding:0.9rem 0;border-bottom:1px solid var(--border-s);cursor:pointer;transition:opacity 0.15s;}
+.event-card:hover{opacity:0.75;}
+.event-card:first-of-type{border-top:1px solid var(--border-s);}
+.event-date-block{flex-shrink:0;width:44px;text-align:center;}
+.event-day{font-family:var(--font-h);font-size:1.4rem;font-weight:700;letter-spacing:-1px;color:var(--accent);line-height:1;}
+.event-month{font-family:var(--font-m);font-size:0.52rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--txt2);}
+.event-info{flex:1;min-width:0;}
+.event-name{font-family:var(--font-h);font-size:0.88rem;font-weight:700;text-transform:uppercase;letter-spacing:-0.3px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.event-meta{font-family:var(--font-m);font-size:0.58rem;color:var(--txt2);margin-top:2px;display:flex;gap:8px;}
+.event-arrow{flex-shrink:0;color:var(--txt3);font-family:var(--font-m);font-size:0.8rem;}
+
+/* SIMILI */
+.similar-section{margin-bottom:2.5rem;}
+.similar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border-s);}
+@media(max-width:480px){.similar-grid{grid-template-columns:repeat(2,1fr);}}
+.sim-card{background:var(--bg);cursor:pointer;display:flex;flex-direction:column;transition:opacity 0.15s;}
+.sim-card:hover{opacity:0.8;}
+.sim-photo{position:relative;aspect-ratio:1/1;overflow:hidden;background:var(--bg2);}
+.sim-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+.sim-photo-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.sim-photo-placeholder span{font-family:var(--font-h);font-size:2rem;font-weight:700;opacity:0.08;color:var(--txt);text-transform:uppercase;}
+.sim-info{padding:7px 8px 10px;}
+.sim-cat{font-family:var(--font-m);font-size:0.52rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;font-weight:700;}
+.sim-name{font-family:var(--font-h);font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:-0.3px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* RIGHT SIDEBAR — sticky */
+.detail-sidebar{}
+.sidebar-card{border:1px solid var(--border-s);padding:1.4rem;margin-bottom:1rem;}
+.sidebar-card + .sidebar-card{margin-top:0;}
+
+/* save button */
+.btn-save{width:100%;font-family:var(--font-m);font-weight:700;font-size:0.78rem;text-transform:uppercase;padding:0.85rem 1.2rem;border:1px solid var(--border);background:var(--accent);color:#111;cursor:pointer;letter-spacing:0.04em;transition:transform 0.15s var(--ease-b),opacity 0.15s;margin-bottom:0.6rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;}
+.btn-save:hover{transform:translate(-1px,-1px);}
+.btn-save.saved{background:transparent;color:var(--txt);border-color:var(--border-s);}
+.btn-save svg{width:14px;height:14px;flex-shrink:0;}
+
+.btn-secondary{width:100%;font-family:var(--font-m);font-weight:700;font-size:0.72rem;text-transform:uppercase;padding:0.65rem 1.2rem;border:1px solid var(--border-s);background:transparent;color:var(--txt2);cursor:pointer;letter-spacing:0.04em;transition:border-color 0.15s,color 0.15s;margin-bottom:0.5rem;display:flex;align-items:center;justify-content:center;gap:0.4rem;}
+.btn-secondary:hover{border-color:var(--border);color:var(--txt);}
+.btn-secondary svg{width:13px;height:13px;}
+
+/* mappa mini */
+.map-preview{width:100%;height:140px;background:var(--bg2);border:1px solid var(--border-s);display:flex;align-items:center;justify-content:center;margin-bottom:0.6rem;cursor:pointer;transition:opacity 0.15s;overflow:hidden;position:relative;}
+.map-preview:hover{opacity:0.85;}
+.map-preview-label{font-family:var(--font-m);font-size:0.6rem;color:var(--txt2);text-transform:uppercase;letter-spacing:0.06em;text-align:center;}
+.map-grid{position:absolute;inset:0;opacity:0.12;}
+
+/* playlist */
+.playlist-label{font-family:var(--font-m);font-size:0.58rem;color:var(--txt3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.playlist-list{display:flex;flex-direction:column;gap:0.35rem;}
+.playlist-item{font-family:var(--font-m);font-size:0.65rem;padding:0.45rem 0.7rem;border:1px solid var(--border-s);color:var(--txt2);cursor:pointer;text-transform:uppercase;letter-spacing:0.03em;transition:border-color 0.15s,color 0.15s;display:flex;align-items:center;justify-content:space-between;}
+.playlist-item:hover{border-color:var(--accent);color:var(--accent);}
+.playlist-item.new{border-style:dashed;}
+
+/* loading */
+.loading{text-align:center;padding:4rem 1rem;font-family:var(--font-m);font-size:0.8rem;color:var(--txt2);text-transform:uppercase;letter-spacing:0.06em;opacity:0.5;}
+
+/* BOTTOM NAV mobile */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:58px;background:var(--bg);border-top:1px solid var(--border);z-index:200;align-items:center;}
+.bottom-nav a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--txt2);font-family:var(--font-m);font-size:0.52rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:6px 0;}
+.bottom-nav a.active{color:var(--accent);}
+.bottom-nav a svg{width:17px;height:17px;}
+.plus-wrap{flex:1;display:flex;align-items:center;justify-content:center;}
+.plus-inner{width:36px;height:36px;background:var(--accent);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+
+@media(max-width:860px){
+  .navbar{padding:0.75rem 1rem;} .hamburger{display:flex;} .bottom-nav{display:flex;padding-bottom:env(safe-area-inset-bottom);}
+  .detail-wrap{padding:1rem 0 80px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="pulse_grid.html" class="back-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
+    Esplora
+  </a>
+  <a href="#" class="logo">The Pulse</a>
+  <div class="nav-right">
+    <button class="hamburger" id="ham"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- contenuto iniettato da JS -->
+<div id="pageContent">
+  <div class="loading">Caricamento...</div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="pulse_grid.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</a>
+  <a href="pulse_grid.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>Esplora</a>
+  <div class="plus-wrap"><div class="plus-inner"><svg width="15" height="15" viewBox="0 0 13 13"><line x1="6.5" y1="1.5" x2="6.5" y2="11.5" stroke="#111" stroke-width="2" stroke-linecap="round"/><line x1="1.5" y1="6.5" x2="11.5" y2="6.5" stroke="#111" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Attività</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profilo</a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/navbar.js"></script>
+<script>
+const NIGHT_CATEGORIES = ['club','centri sociali'];
+const NIGHT_TAGS = ['24/7','Notte','Serata'];
+const BG_MAP = {'club':'#110818','aule studio':'#081208','centri sociali':'#120808','caffè letterari':'#080812','thrifting':'#140F06','parchi attrezzati':'#080E08','baretti':'#0F0C06','circoli arci':'#100606','skatepark':'#080C10','schimico':'#0A100A','spazi ibridi':'#0C0C10','cinema':'#0A0808'};
+
+function getPlaceBg(cat){ return BG_MAP[cat] || '#111'; }
+function abbr(name){ if(!name)return'?'; return name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+function isNightPlace(p){ return NIGHT_CATEGORIES.includes(p.category)||(p.tags||[]).some(t=>NIGHT_TAGS.includes(t)); }
+
+/* Legge ?id= dall'URL */
+function getIdFromUrl(){
+  const params = new URLSearchParams(window.location.search);
+  return params.get('id');
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const id = getIdFromUrl();
+  if (!id) { showError('Posto non trovato.'); return; }
+  await loadDetail(id);
+});
+
+async function loadDetail(id) {
+  let place, events, similar;
+  try {
+    /* luogo principale */
+    const { data: p, error: pe } = await sb.from('luoghi').select('*').eq('id', id).single();
+    if (pe) throw pe;
+    place = p;
+
+    /* eventi ospitati in questo luogo */
+    const { data: ev } = await sb
+      .from('eventi')
+      .select('*')
+      .eq('luogo_id', id)
+      .gte('data', new Date().toISOString().split('T')[0])
+      .order('data', { ascending: true })
+      .limit(5);
+    events = ev || [];
+
+    /* posti simili stessa categoria, escludendo questo */
+    const { data: sim } = await sb
+      .from('luoghi')
+      .select('*')
+      .eq('category', place.category)
+      .neq('id', id)
+      .limit(6);
+    similar = sim || [];
+
+  } catch (err) {
+    console.warn('Supabase error:', err.message);
+    showError('Impossibile caricare il posto. Controlla la connessione.');
+    return;
+  }
+
+  renderDetail(place, events, similar);
+}
+
+function renderDetail(place, events, similar) {
+  const savedList = JSON.parse(localStorage.getItem('nodo_saved') || '[]');
+  const isSaved = savedList.some(s => s.id === place.id);
+  const isNight = isNightPlace(place);
+  const bg = getPlaceBg(place.category);
+
+  /* hero */
+  const heroInner = place.image_url
+    ? `<img src="${place.image_url}" alt="${place.name}">`
+    : `<div class="hero-placeholder" style="background:${bg}"><span>${abbr(place.name)}</span></div>`;
+
+  const nightBadge = isNight ? `<div class="hero-night">🌙 Aperto di notte</div>` : '';
+
+  /* tags */
+  const tagsHTML = (place.tags||[]).map(t=>`<span class="tag-chip">${t}</span>`).join('')
+    + (isNight ? '<span class="tag-chip night">🌙 Notte</span>' : '');
+
+  /* eventi */
+  let eventsHTML = '';
+  if (events.length > 0) {
+    eventsHTML = `
+      <div class="events-section">
+        <div class="section-label">Prossimi eventi ospitati</div>
+        ${events.map(ev => {
+          const d = new Date(ev.data);
+          const day = d.getDate();
+          const month = d.toLocaleString('it',{month:'short'}).toUpperCase();
+          return `
+            <div class="event-card" onclick="window.location.href='event_detail.html?id=${ev.id}'">
+              <div class="event-date-block">
+                <div class="event-day">${day}</div>
+                <div class="event-month">${month}</div>
+              </div>
+              <div class="event-info">
+                <div class="event-name">${ev.title||ev.name||'Evento'}</div>
+                <div class="event-meta">
+                  <span>${ev.ora || ''}</span>
+                  <span>${ev.prezzo ? (ev.prezzo === 0 ? 'Gratuito' : '€'+ev.prezzo) : ''}</span>
+                </div>
+              </div>
+              <div class="event-arrow">→</div>
+            </div>`;
+        }).join('')}
+      </div>`;
+  }
+
+  /* simili */
+  let similarHTML = '';
+  if (similar.length > 0) {
+    similarHTML = `
+      <div class="similar-section">
+        <div class="section-label">Posti simili</div>
+        <div class="similar-grid">
+          ${similar.slice(0,6).map(s => {
+            const sbg = getPlaceBg(s.category);
+            const photoSim = s.image_url
+              ? `<img src="${s.image_url}" alt="${s.name}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">`
+              : `<div class="sim-photo-placeholder" style="background:${sbg}"><span>${abbr(s.name)}</span></div>`;
+            return `
+              <div class="sim-card" onclick="window.location.href='place_detail.html?id=${s.id}'">
+                <div class="sim-photo">${photoSim}</div>
+                <div class="sim-info">
+                  <div class="sim-cat">${s.category||''}</div>
+                  <div class="sim-name">${s.name}</div>
+                </div>
+              </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+  }
+
+  /* mappa mini simulata (in prod → Leaflet small map) */
+  const mapHTML = `
+    <div class="map-preview" onclick="window.open('https://www.google.com/maps?q=${place.lat},${place.lng}','_blank')">
+      <svg class="map-grid" viewBox="0 0 280 140" xmlns="http://www.w3.org/2000/svg">
+        <rect width="280" height="140" fill="${bg}"/>
+        <line x1="0" y1="46" x2="280" y2="46" stroke="#F4F4F0" stroke-width="0.5"/>
+        <line x1="0" y1="92" x2="280" y2="92" stroke="#F4F4F0" stroke-width="0.5"/>
+        <line x1="70" y1="0" x2="70" y2="140" stroke="#F4F4F0" stroke-width="0.5"/>
+        <line x1="140" y1="0" x2="140" y2="140" stroke="#F4F4F0" stroke-width="0.5"/>
+        <line x1="210" y1="0" x2="210" y2="140" stroke="#F4F4F0" stroke-width="0.5"/>
+        <circle cx="140" cy="70" r="6" fill="#CCFF00"/>
+        <circle cx="140" cy="70" r="14" fill="none" stroke="#CCFF00" stroke-width="1" opacity="0.4"/>
+      </svg>
+    </div>`;
+
+  document.title = `${place.name} — The Pulse`;
+
+  document.getElementById('pageContent').innerHTML = `
+    <div class="hero">
+      ${heroInner}
+      <div class="hero-cat">${place.category||''}</div>
+      ${nightBadge}
+    </div>
+
+    <div class="page">
+      <div class="detail-wrap">
+
+        <!-- COLONNA SINISTRA -->
+        <div class="detail-main">
+          <div class="place-nbhd">📍 ${place.neighborhood||''}</div>
+          <h1 class="place-name">${place.name}</h1>
+
+          <div class="tag-row">${tagsHTML}</div>
+
+          <div class="stats-bar">
+            <div class="stat">
+              <div class="stat-val">★ ${place.rating||'—'}</div>
+              <div class="stat-lbl">Rating</div>
+            </div>
+            <div class="stat">
+              <div class="stat-val">${place.distance ? place.distance+'km' : '—'}</div>
+              <div class="stat-lbl">Distanza</div>
+            </div>
+            <div class="stat">
+              <div class="stat-val" style="font-size:0.82rem;color:${isNight?'#3300ff':'var(--accent)'};">${isNight?'Notte':'Giorno'}</div>
+              <div class="stat-lbl">Orari</div>
+            </div>
+            <div class="stat">
+              <div class="stat-val" style="font-size:0.82rem;">${place.orari||'—'}</div>
+              <div class="stat-lbl">Apertura</div>
+            </div>
+          </div>
+
+          <div class="section-label">Descrizione</div>
+          <p class="place-desc">${place.long_desc || place.short_desc || 'Nessuna descrizione disponibile.'}</p>
+
+          ${eventsHTML}
+          ${similarHTML}
+        </div>
+
+        <!-- COLONNA DESTRA -->
+        <div class="detail-sidebar">
+          <div class="sidebar-card">
+            <button class="btn-save${isSaved?' saved':''}" id="saveBtn" onclick="toggleSave(${place.id})">
+              <svg viewBox="0 0 24 24" fill="${isSaved?'#CCFF00':'none'}" stroke="${isSaved?'#CCFF00':'currentColor'}" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+              ${isSaved ? 'Salvato' : 'Salva posto'}
+            </button>
+            <button class="btn-secondary" onclick="window.open('https://www.google.com/maps?q=${place.lat},${place.lng}','_blank')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>
+              Portami lì
+            </button>
+            <button class="btn-secondary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Condividi
+            </button>
+          </div>
+
+          <div class="sidebar-card">
+            ${mapHTML}
+            <div style="font-family:var(--font-m);font-size:0.62rem;color:var(--txt2);">${place.address||place.neighborhood||''}</div>
+          </div>
+
+          <div class="sidebar-card">
+            <div class="playlist-label">Aggiungi a playlist</div>
+            <div class="playlist-list">
+              <div class="playlist-item new">+ Nuova playlist</div>
+              <div class="playlist-item">Notti milanesi <span>+</span></div>
+              <div class="playlist-item">Studio quieto <span>+</span></div>
+              <div class="playlist-item">Weekend cultura <span>+</span></div>
+              <div class="playlist-item">Da scoprire <span>+</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  `;
+}
+
+function toggleSave(id) {
+  const saved = JSON.parse(localStorage.getItem('nodo_saved') || '[]');
+  const exists = saved.some(s => s.id === id);
+  /* necessario recuperare il place dall'overlay body o rifare fetch */
+  const place = { id };
+  const newSaved = exists ? saved.filter(s=>s.id!==id) : [...saved, place];
+  localStorage.setItem('nodo_saved', JSON.stringify(newSaved));
+  const btn = document.getElementById('saveBtn');
+  if (!btn) return;
+  const nowSaved = !exists;
+  btn.className = 'btn-save' + (nowSaved?' saved':'');
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="${nowSaved?'#CCFF00':'none'}" stroke="${nowSaved?'#CCFF00':'currentColor'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>${nowSaved?'Salvato':'Salva posto'}`;
+}
+
+function showError(msg) {
+  document.getElementById('pageContent').innerHTML = `<div class="loading">${msg}</div>`;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "name": "TECHNO WALL",
+    "date": "20.03.26",
+    "time": "23:00",
+    "venue": "Forte Prenestino",
+    "neighborhood": "Centocelle",
+    "category": "techno",
+    "color": "#CCFF00",
+    "link": "https://example.com",
+    "rotation": -3
+  },
+  {
+    "id": 2,
+    "name": "INDUSTRIAL PULSE",
+    "date": "28.03.26",
+    "time": "22:00",
+    "venue": "Industrie Fluviali",
+    "neighborhood": "Ostiense",
+    "category": "industrial",
+    "color": "#FF6B35",
+    "link": "https://example.com",
+    "rotation": 2
+  },
+  {
+    "id": 3,
+    "name": "CRACK! FUMETTO",
+    "date": "05.04.26",
+    "time": "15:00",
+    "venue": "Forte Prenestino",
+    "neighborhood": "Centocelle",
+    "category": "cultura",
+    "color": "#F4F4F0",
+    "link": "https://example.com",
+    "rotation": -1
+  },
+  {
+    "id": 4,
+    "name": "SUNDAY MARKET",
+    "date": "06.04.26",
+    "time": "10:00",
+    "venue": "Largo",
+    "neighborhood": "Prenestina",
+    "category": "mercato",
+    "color": "#FF3366",
+    "link": "https://example.com",
+    "rotation": 4
+  },
+  {
+    "id": 5,
+    "name": "DEEP MINDS",
+    "date": "12.04.26",
+    "time": "23:30",
+    "venue": "Monk",
+    "neighborhood": "Casal Bertone",
+    "category": "club",
+    "color": "#CCFF00",
+    "link": "https://example.com",
+    "rotation": -2
+  },
+  {
+    "id": 6,
+    "name": "OPEN MIC NIGHT",
+    "date": "18.04.26",
+    "time": "21:00",
+    "venue": "Libreria Giufà",
+    "neighborhood": "San Lorenzo",
+    "category": "live",
+    "color": "#FFD700",
+    "link": "https://example.com",
+    "rotation": 3
+  },
+  {
+    "id": 7,
+    "name": "URBAN SKETCH",
+    "date": "25.04.26",
+    "time": "14:00",
+    "venue": "MAAM",
+    "neighborhood": "Casilino",
+    "category": "arte",
+    "color": "#FF6B35",
+    "link": "https://example.com",
+    "rotation": -4
+  },
+  {
+    "id": 8,
+    "name": "VINYL SESSIONS",
+    "date": "03.05.26",
+    "time": "20:00",
+    "venue": "Cinema Troisi",
+    "neighborhood": "Trastevere",
+    "category": "musica",
+    "color": "#F4F4F0",
+    "link": "https://example.com",
+    "rotation": 1
+  }
+]

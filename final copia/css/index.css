@@ -1,0 +1,643 @@
+/* --- VARIABILI GLOBALI E TEMI --- */
+:root {
+    /* Tema Chiaro (Neo-Brutalismo Base) */
+    --bg-color: #1A1A1A; /* Bianco sporco, effetto carta */
+    --text-color: #F4F4F0;
+    --accent-color: #CCFF00; /* Arancione fluo/neon per i bottoni */
+    --border-color: #F4F4F0;
+    --button-text-color: #1A1A1A;
+    
+    /* Font */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+    
+    /* Ombra brutalista standard: niente sfocatura, spostata di 4px */
+    --brutal-shadow: 4px 4px 0px var(--border-color);
+    --brutal-shadow-hover: 6px 6px 0px var(--border-color);
+}
+
+/* --- RESET E STILI BASE --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-body);
+    /* Effetto "Noise" per dare il tocco fanzine/analogico */
+    /*background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");*/
+    transition: background-color 0.3s, color 0.3s;
+    overflow-x: hidden;
+}
+
+/* --- NAVIGAZIONE --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.nav-links a {
+    font-family: var(--font-mono);
+    color: var(--text-color);
+    text-decoration: none;
+    margin: 0 1rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+}
+
+/* --- BOTTONI BRUTALISTI --- */
+.btn-primary, .btn-icon {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--button-text-color);
+    background-color: var(--accent-color);
+    border: 2px solid var(--border-color);
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    
+    /* Il segreto del Neo-Brutalismo: border-radius basso e ombra netta */
+    border-radius: 4px; 
+    box-shadow: var(--brutal-shadow);
+    transition: all 0.2s ease;
+}
+
+.btn-icon {
+    background-color: transparent;
+    padding: 0.5rem 1rem;
+}
+
+.btn-primary:hover, .btn-icon:hover {
+    /* Al passaggio del mouse, il bottone si sposta leggermente su e a sinistra, e l'ombra si allunga */
+    transform: translate(-2px, -2px);
+    box-shadow: var(--brutal-shadow-hover);
+}
+
+.btn-primary:active, .btn-icon:active {
+    /* Quando clicchi, il bottone si "schiaccia" contro la pagina */
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px var(--border-color);
+}
+/* --- HERO SEARCH BAR --- */
+.hero-search-container {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 600px;
+}
+
+.hero-search-form {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.hero-search-input {
+    flex-grow: 1;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    padding: 1rem;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 2px solid var(--border-color);
+    box-shadow: var(--brutal-shadow);
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+/* Effetto focus meccanico per l'input */
+.hero-search-input:focus {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--brutal-shadow-hover);
+}
+
+.hero-search-input::placeholder {
+    color: var(--text-color);
+    opacity: 0.5;
+}
+
+.hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.tag-label {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+.hero-tag {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--bg-color);
+    background-color: var(--text-color);
+    text-decoration: none;
+    padding: 0.3rem 0.6rem;
+    border: 2px solid var(--border-color);
+    box-shadow: 2px 2px 0px var(--border-color);
+    transition: transform 0.1s, box-shadow 0.1s, background-color 0.1s;
+}
+
+.hero-tag:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0px var(--border-color);
+    background-color: var(--accent-color);
+    color: #111; /* Testo scuro sul giallo fluo */
+}
+
+/* Aggiustamento Responsive per la Home */
+@media (max-width: 768px) {
+    .hero-search-form {
+        flex-direction: column;
+    }
+    .hero-tags {
+        justify-content: center;
+    }
+    .hero-search-container {
+        margin: 2rem auto 0;
+    }
+}
+/* --- HERO SECTION --- */
+.hero-section {
+    padding: 4rem 2rem;
+    gap: 2rem;
+    align-items: center;
+}
+
+.label-mono {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    padding: 0.3rem 0.6rem;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+
+.hero-title {
+    font-family: var(--font-heading);
+    font-size: 4.5rem;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+}
+
+.hero-description {
+    font-size: 1.2rem;
+    max-width: 80%;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+
+/* --- MARQUEE (Testo a scorrimento) --- */
+.marquee-container {
+    border-top: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color);
+    padding: 1rem 0;
+    overflow: hidden;
+    background-color: var(--accent-color);
+    white-space: nowrap;
+}
+
+.marquee-content {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    animation: scroll 15s linear infinite;
+    color: #111; /* Sempre nero sul colore d'accento */
+}
+/* --- SEZIONE IN EVIDENZA (CARD) --- */
+.featured-section {
+    padding: 4rem 2rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.card-grid {
+    display: grid;
+    /* La magia del responsive automatico: crea colonne larghe minimo 300px */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+}
+
+.brutal-card {
+    background-color: var(--bg-color);
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    box-shadow: var(--brutal-shadow);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+/* Effetto Hover sulla card: si alza come i bottoni */
+.brutal-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--brutal-shadow-hover);
+}
+
+.card-img {
+    height: 180px;
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    
+    /* --- LE DUE AGGIUNTE FONDAMENTALI --- */
+    position: relative; /* Crea il recinto per l'immagine e l'etichetta */
+    overflow: hidden; /* Taglia via tutto ciò che esce da questo contenitore */
+    
+    /* Effetto pattern a pois opzionale per i placeholder */
+    background-image: radial-gradient(var(--bg-color) 2px, transparent 2px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+}
+
+/* --- QUESTA È LA REGOLA MAGICA PER L'IMMAGINE CHE MANCAVA --- */
+.card-img img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Riempie lo spazio senza deformare o schiacciare la foto */
+    z-index: 0; /* Assicura che la foto stia SOTTO l'etichetta */
+}
+
+
+
+.card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.card-tag {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--bg-color);
+    background-color: var(--text-color);
+    padding: 0.2rem 0.5rem;
+    align-self: flex-start;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.card-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.card-desc {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    opacity: 0.9;
+}
+/* --- BANNER FAI LA SPIA (USER GENERATED CONTENT) --- */
+.snitch-banner {
+    background-color: var(--text-color); /* Sfondo chiaro/bianco */
+    color: var(--bg-color); /* Testo scuro/nero */
+    padding: 4rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 4px solid var(--border-color);
+    border-bottom: 4px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.snitch-content {
+    flex: 1; /* Prende lo spazio disponibile */
+    min-width: 300px;
+}
+
+.snitch-content h2 {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    line-height: 1;
+}
+
+.snitch-content p {
+    font-size: 1.1rem;
+    font-family: var(--font-mono);
+    max-width: 600px;
+    font-weight: 700;
+}
+
+/* Il bottone Brutalista per il Banner */
+.btn-snitch {
+    background-color: var(--accent-color);
+    color: #111; /* Sempre nero sul giallo fluo */
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.5rem;
+    padding: 1.5rem 2.5rem;
+    text-decoration: none;
+    border: 3px solid #111;
+    box-shadow: 6px 6px 0px #111; /* Ombra nera dura */
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.btn-snitch:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0px #111;
+    background-color: #fff; /* Diventa bianco al passaggio del mouse */
+}
+
+/* Responsive per schermi piccoli */
+@media (max-width: 768px) {
+    .snitch-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 3rem 1.5rem;
+    }
+    
+    .snitch-content h2 {
+        font-size: 2.2rem;
+    }
+    
+    .btn-snitch {
+        width: 100%;
+        text-align: center;
+        font-size: 1.2rem;
+    }
+}
+/* --- RESPONSIVE ADJUSTMENTS --- */
+@media (max-width: 768px) {
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+    .section-title {
+        font-size: 2.2rem;
+    }
+}
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* --- RESPONSIVE MOBILE --- */
+@media (max-width: 768px) {
+    .hero-section {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    .hero-title { font-size: 3rem; }
+    .hero-description { max-width: 100%; margin: 0 auto 2rem; }
+}
+
+/* --- CHI SIAMO --- */
+.about-section {
+    background-color: var(--accent-color);
+    color: #111;
+    padding: 4rem 2rem;
+    border-top: 4px solid var(--border-color);
+    text-align: center;
+}
+
+.about-description {
+    font-size: 1.2rem;
+    font-family: var(--font-mono);
+    max-width: 800px;
+    margin: 2rem auto 0;
+    line-height: 1.6;
+    font-weight: 700;
+}
+/* --- FOOTER --- */
+.site-footer {
+    background-color: var(--text-color); /* Sfondo chiaro */
+    color: var(--bg-color); /* Testo scuro */
+    padding: 2rem 2rem 1.5rem;
+    border-top: 4px solid var(--border-color);
+    margin-top: 4rem;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.footer-logo {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 1.5rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+}
+
+.footer-links a {
+    color: var(--bg-color);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: var(--accent-color);
+    /* Bordo nero per staccare sul giallo se il testo diventa giallo */
+    background-color: var(--bg-color); 
+    padding: 0 0.5rem;
+}
+
+.footer-bottom {
+    border-top: 2px solid var(--bg-color);
+    padding-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+/* --- PAGINA FAI LA SPIA (FORM) --- */
+.form-section {
+    max-width: 800px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+}
+
+.form-header {
+    margin-bottom: 3rem;
+    border-bottom: 4px solid var(--border-color);
+    padding-bottom: 2rem;
+}
+
+.brutal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.form-group label {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    color: var(--accent-color); /* Giallo fluo per farsi notare */
+}
+
+.brutal-form input,
+.brutal-form select,
+.brutal-form textarea {
+    width: 100%;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 3px solid var(--border-color);
+    padding: 1rem;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    box-shadow: 4px 4px 0px var(--border-color);
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.brutal-form select {
+    appearance: none; /* Toglie la freccina standard brutta del browser */
+    cursor: pointer;
+}
+
+.brutal-form input:focus,
+.brutal-form select:focus,
+.brutal-form textarea:focus {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.brutal-form input::placeholder,
+.brutal-form textarea::placeholder {
+    color: var(--text-color);
+    opacity: 0.4;
+}
+
+.btn-submit {
+    background-color: var(--accent-color);
+    color: #111;
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 1.5rem;
+    border: 3px solid var(--border-color);
+    box-shadow: 6px 6px 0px var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 1rem;
+}
+
+.btn-submit:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0px var(--border-color);
+    background-color: #fff;
+}
+
+/* --- SCROLL REVEAL --- */
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.scroll-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- SEZIONE I TUOI POSTI --- */
+.saved-section {
+    padding: 4rem 2rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.btn-remove-saved {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--text-color);
+    border: 1.5px solid rgba(244,244,240,0.3);
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    margin-top: 0.8rem;
+    transition: all 0.2s ease;
+}
+.btn-remove-saved:hover {
+    border-color: #ff4444;
+    color: #ff4444;
+}

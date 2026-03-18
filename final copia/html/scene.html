@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Grid — ClubX</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/scene.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+</head>
+<body>
+
+
+    <!-- HERO HEADER -->
+    <div class="grid-header">
+        <div class="grid-header-text">
+            <h1 class="grid-title">EVENTI</span></h1>
+            <p class="grid-desc">Le serate, i mercatini, i concerti. Tutto quello che succede a Roma questa settimana.</p>
+        </div>
+        <div class="grid-filter-row">
+            <button class="cat-btn active" data-cat="tutti">TUTTI</button>
+            <button class="cat-btn" data-cat="techno">TECHNO</button>
+            <button class="cat-btn" data-cat="club">CLUB</button>
+            <button class="cat-btn" data-cat="live">LIVE</button>
+            <button class="cat-btn" data-cat="arte">ARTE</button>
+            <button class="cat-btn" data-cat="cultura">CULTURA</button>
+            <button class="cat-btn" data-cat="mercato">MERCATO</button>
+            <button class="cat-btn" data-cat="musica">MUSICA</button>
+            <button class="cat-btn" data-cat="industrial">INDUSTRIAL</button>
+        </div>
+    </div>
+
+    <!-- IL MURO -->
+    <main class="wall-container">
+        <div class="wall-bg">
+            <img src="../icons/ponte.png" alt="Muro urbano Roma" class="wall-img">
+            <div class="wall-overlay"></div>
+        </div>
+        <!-- I poster vengono iniettati da thegrid.js -->
+        <div class="posters-stage" id="postersStage"></div>
+
+        <!-- Hint scroll -->
+        <div class="scroll-hint" id="scrollHint">SCORRI →</div>
+
+        <!-- Empty state -->
+        <div class="wall-empty" id="wallEmpty" style="display:none">
+            <span class="empty-icon">📭</span>
+            <span class="empty-text">Nessun evento per questa categoria.</span>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-logo" data-brand="footer-logo">CLUB<span>X</span></div>
+            <div class="footer-links">
+                <a href="#" data-brand="social-instagram">Instagram</a>
+                <a href="#" data-brand="social-tiktok">TikTok</a>
+                <a href="segnala.html">Fai la Spia</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p data-brand="copyright">/// MADE IN ROME BY ITS LAZIO DIGITAL STUDENTS &copy; 2026</p>
+        </div>
+    </footer>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/brand.config.js"></script>
+    <script src="../js/scene.js"></script>
+</body>
+</html>

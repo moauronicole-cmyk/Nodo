@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "name": "Cinema Troisi",
+    "category": "cinema",
+    "neighborhood": "Trastevere",
+    "lat": 41.8841,
+    "lng": 12.4718,
+    "short_desc": "Aula studio 24/7, iconica e ultra-moderna.",
+    "long_desc": "Oltre alla sala cinematografica, ospita un'aula studio gratuita aperta 24 ore su 24, 365 giorni l'anno. Wi-Fi velocissimo, prese elettriche su ogni tavolo e bar interno. Il posto definitivo per i nottambuli.",
+    "tags": ["24/7", "Wi-Fi", "Prese", "Bar"],
+    "is_studying_friendly": true
+  },
+  {
+    "id": 2,
+    "name": "Libreria Giufà",
+    "category": "caffè letterari",
+    "neighborhood": "San Lorenzo",
+    "lat": 41.8923,
+    "lng": 12.5135,
+    "short_desc": "Caffè letterario nel cuore di San Lorenzo.",
+    "long_desc": "Un mix tra libreria indipendente e caffetteria. Atmosfera rilassata, perfetta per leggere, studiare o bere una birra artigianale circondati da graphic novel e narrativa di qualità.",
+    "tags": ["Libri", "Caffè", "Tranquillo"],
+    "is_studying_friendly": true
+  },
+  {
+    "id": 3,
+    "name": "Industrie Fluviali",
+    "category": "aule studio",
+    "neighborhood": "Ostiense",
+    "lat": 41.8715,
+    "lng": 12.4792,
+    "short_desc": "Ecosistema di co-working in un ex opificio.",
+    "long_desc": "Uno spazio di rigenerazione urbana con terrazza panoramica. Offre aree di co-working e ospita spesso talk, mostre e workshop per creativi.",
+    "tags": ["Design", "Terrazza", "Co-working"],
+    "is_studying_friendly": true
+  },
+  {
+    "id": 4,
+    "name": "CSOA Forte Prenestino",
+    "category": "centri sociali",
+    "neighborhood": "Centocelle",
+    "lat": 41.8906,
+    "lng": 12.5621,
+    "short_desc": "Centro sociale storico in un forte ottocentesco.",
+    "long_desc": "Uno degli spazi occupati più grandi d'Europa. Cinema, teatro, sala da tè, enoteca e laboratori. Qui si tiene il Crack! Festival del fumetto.",
+    "tags": ["Underground", "DIY", "Festival"],
+    "is_studying_friendly": false
+  },
+  {
+    "id": 5,
+    "name": "Monk",
+    "category": "club",
+    "neighborhood": "Casal Bertone",
+    "lat": 41.8981,
+    "lng": 12.5342,
+    "short_desc": "Circolo culturale con grande giardino estivo.",
+    "long_desc": "Location di riferimento per la musica live a Roma. D'estate il giardino è perfetto per studiare di giorno o bere qualcosa la sera durante i concerti.",
+    "tags": ["Musica Live", "Giardino", "Eventi"],
+    "is_studying_friendly": true
+  },
+  {
+    "id": 6,
+    "name": "Porta Portese",
+    "category": "thrifting",
+    "neighborhood": "Portuense",
+    "lat": 41.8765,
+    "lng": 12.4705,
+    "short_desc": "Il mercato delle pulci più famoso di Roma.",
+    "long_desc": "Ogni domenica mattina. Per i veri affari (vintage e second-hand a 1€) bisogna arrivare all'alba o alla chiusura.",
+    "tags": ["Domenica", "Economico", "Vintage"],
+    "is_studying_friendly": false
+  },
+  {
+    "id": 7,
+    "name": "Biblioteca Mameli",
+    "category": "aule studio",
+    "neighborhood": "Pigneto",
+    "lat": 41.8894,
+    "lng": 12.5265,
+    "short_desc": "Biblioteca comunale con cortile interno.",
+    "long_desc": "Uno spazio tranquillo e luminoso al Pigneto. Ideale per sessioni di studio intense lontano dal caos delle aule universitarie sovraffollate.",
+    "tags": ["Gratis", "Silenzio", "Pigneto"],
+    "is_studying_friendly": true
+  },
+  {
+    "id": 8,
+    "name": "Largo",
+    "category": "club",
+    "neighborhood": "Prenestina",
+    "lat": 41.8912,
+    "lng": 12.5358,
+    "short_desc": "Spazio polifunzionale per musica e relax.",
+    "long_desc": "Un giardino urbano con palco per concerti, area food e mercatini. Perfetto per la domenica pomeriggio.",
+    "tags": ["Prato", "Street Food", "Club"],
+    "is_studying_friendly": false
+  },
+  {
+    "id": 9,
+    "name": "Humana Vintage",
+    "category": "thrifting",
+    "neighborhood": "Monti",
+    "lat": 41.8947,
+    "lng": 12.4891,
+    "short_desc": "La mecca del vintage etico.",
+    "long_desc": "Negozio second-hand con selezioni anni '70-'80-'90. Famoso per i periodi di sconti 'tutto a 5€'.",
+    "tags": ["Fashion", "Etico", "Second-hand"],
+    "is_studying_friendly": false
+  },
+  {
+    "id": 10,
+    "name": "Parco della Caffarella",
+    "category": "parchi attrezzati",
+    "neighborhood": "Appia Antica",
+    "lat": 41.8681,
+    "lng": 12.5185,
+    "short_desc": "Oasi naturale per outdoor working.",
+    "long_desc": "Enorme parco dove trovare tavoli di legno all'ombra dei pini romani. Perfetto per studiare all'aperto se hai un hotspot mobile.",
+    "tags": ["Natura", "Running", "Relax"],
+    "is_studying_friendly": true
+  }
+]
